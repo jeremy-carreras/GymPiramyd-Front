@@ -27,10 +27,10 @@ const Nav = (props) => {
           icon={faBars}
         />
         <p className={`${styles.titulo} col-5 h4`}>{props.titulo}</p>
-        <div className={`col-5 offset-4 d-inline-flex justify-content-end`}>
+        <div className={`col-5 offset-5 d-inline-flex justify-content-end`}>
           <p className={`${styles.departamento}`}>
-            Departamento de Tipografía y Diseño <br />
-            Departamento de Reproducciones Gráficas
+            Sistema Integral de Administración
+            <br />
           </p>
         </div>
         <div className={styles.triangle}></div>
@@ -43,18 +43,30 @@ const Nav = (props) => {
             onClick={handleShow}
             icon={faBars}
           />
-          <Offcanvas.Title>Menu</Offcanvas.Title>
+          <Offcanvas.Title>Menú</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body className={styles.contenedor}>
           {tipoUsuario === 1 ? (
             <div>
               <br />
-              <Link href="/adscripcion/misPedidos">
-                <a className={`${styles.link} my-5`}>Alta de un servicio</a>
+              <Link href="/matricula">
+                <a className={`${styles.link} my-5`}>Matrícula</a>
               </Link>
               <br />
-              <Link href="/adscripcion/misPedidos">
-                <a className={`${styles.link} my-5`}>Mis pedidos</a>
+              <Link href="/inscripciones">
+                <a className={`${styles.link} my-5`}>Inscripciones</a>
+              </Link>
+              <br />
+              <Link href="/registroPagos">
+                <a className={`${styles.link} my-5`}>Registro de pagos</a>
+              </Link>
+              <br />
+              <Link href="/pagos">
+                <a className={`${styles.link} my-5`}>Pagos</a>
+              </Link>
+              <br />
+              <Link href="/altaTrabajador">
+                <a className={`${styles.link} my-5`}>Alta de trabajador</a>
               </Link>
               <br />
             </div>
@@ -64,69 +76,26 @@ const Nav = (props) => {
           {tipoUsuario === 2 ? (
             <div>
               <br />
-              <Link href="/trabajador/misProyectos">
-                <a className={`${styles.link} my-5`}>
-                  Solicitudes de servicios
-                </a>
+              <Link href="/matricula">
+                <a className={`${styles.link} my-5`}>Matrícula</a>
               </Link>
               <br />
-              <br />
-              <Link href="/">
-                <a className={`${styles.link} my-5`}>Estadísticas personales</a>
+              <Link href="/inscripciones">
+                <a className={`${styles.link} my-5`}>Inscripciones</a>
               </Link>
               <br />
-            </div>
-          ) : (
-            <></>
-          )}
-          {tipoUsuario === 3 ? (
-            <div>
-              <br />
-              <Link href="/administrador/solicitudesServicios">
-                <a className={`${styles.link} my-5`}>
-                  Solicitudes de servicios
-                </a>
+              <Link href="/registroPagos">
+                <a className={`${styles.link} my-5`}>Registro de pagos</a>
               </Link>
               <br />
-              <Link href="/administrador/trabajadores">
-                <a className={`${styles.link} my-5`}>Trabajadores</a>
-              </Link>
-              <br />
-              <Link href="/">
-                <a className={`${styles.link} my-5`}>Alta de un libro</a>
-              </Link>
-              <br />
-              <Link href="/">
-                <a className={`${styles.link} my-5`}>Estadísticas</a>
+              <Link href="/pagos">
+                <a className={`${styles.link} my-5`}>Pagos</a>
               </Link>
               <br />
             </div>
           ) : (
             <></>
           )}
-          {tipoUsuario === 4 ? (
-            <div>
-              <br />
-              <Link href="/comunicacion/aprobaciones">
-                <a className={`${styles.link} my-5`}>Aprobaciones</a>
-              </Link>
-              <br />
-            </div>
-          ) : (
-            <></>
-          )}
-          {tipoUsuario === 5 ? (
-            <div>
-              <br />
-              <Link href="/reproduccionesGraficas/impresiones">
-                <a className={`${styles.link} my-5`}>Impresiones</a>
-              </Link>
-              <br />
-            </div>
-          ) : (
-            <></>
-          )}
-
           <Link href="/">
             <a className={`${styles.link} ${styles.cerrar}`}>Cerrar sesión</a>
           </Link>

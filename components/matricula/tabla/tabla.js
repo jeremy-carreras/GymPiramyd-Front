@@ -7,7 +7,7 @@ import {
   FormControl,
   Row,
 } from "react-bootstrap";
-//import Swal from "sweetalert2";
+import Swal from "sweetalert2";
 import {
   faCaretDown,
   faSearch,
@@ -26,6 +26,30 @@ import { useRouter } from "next/dist/client/router";
 const dataPrueba = [
   {
     clave: "CLIENT-0001",
+    nombre: "Nombre Apellido1 Apellido2",
+    fechaUltimoPago: "15-05-2022",
+    fechaProximoPago: "15-05-2022",
+  },
+  {
+    clave: "CLIENT-0002",
+    nombre: "Nombre Apellido1 Apellido2",
+    fechaUltimoPago: "15-05-2022",
+    fechaProximoPago: "15-05-2022",
+  },
+  {
+    clave: "CLIENT-0003",
+    nombre: "Nombre Apellido1 Apellido2",
+    fechaUltimoPago: "15-05-2022",
+    fechaProximoPago: "15-05-2022",
+  },
+  {
+    clave: "CLIENT-0004",
+    nombre: "Nombre Apellido1 Apellido2",
+    fechaUltimoPago: "15-05-2022",
+    fechaProximoPago: "15-05-2022",
+  },
+  {
+    clave: "CLIENT-0005",
     nombre: "Nombre Apellido1 Apellido2",
     fechaUltimoPago: "15-05-2022",
     fechaProximoPago: "15-05-2022",
@@ -156,7 +180,10 @@ const Tabla = () => {
   };
 
   return (
-    <Container className={`${styles.container} mb-5`}>
+    <Container
+      style={{ backgroundColor: "#fff", width: "85%" }}
+      className={`${styles.container} ${styles.shadow} rounded my-5`}
+    >
       {loading ? (
         <div style={{ textAlign: "center", marginTop: "200px" }}>
           {/*<SpinnerLoading width={"3rem"} height={"3rem"} fontSize={"1.7rem"} />*/}
@@ -165,14 +192,14 @@ const Tabla = () => {
         <div>
           {dataCompleta.length === 0 ? (
             <Row style={{ textAlign: "center", margin: "200px 0 200px 0" }}>
-              <p className="h2">No hay pedidos</p>
+              <p className="h2">No hay registros</p>
             </Row>
           ) : (
-            <div>
+            <div className="p-4">
               <div style={{ textAlign: "left", width: "15rem" }}>
-                <InputGroup className="mt-5" size="sm">
+                <InputGroup className="mt-2" size="sm">
                   <FormControl
-                    placeholder="Folio, producto, evento"
+                    placeholder="Clave, Nombre"
                     value={busqueda}
                     onChange={(value) => {
                       setBusqueda(value.target.value);
@@ -194,7 +221,7 @@ const Tabla = () => {
               ) : (
                 <div
                   style={{
-                    marginTop: "40px",
+                    marginTop: "30px",
                     overflow: "scroll",
                     maxHeight: "25rem",
                     minHeight: "12rem",
@@ -221,25 +248,25 @@ const Tabla = () => {
                       </tr>
                     </thead>
                     <tbody>
-                      {data.map((pedido, index) => (
+                      {data.map((cliente, index) => (
                         <tr
                           key={index}
                           onClick={() => {
-                            handleNextPage(pedido);
+                            handleNextPage(cliente);
                           }}
                           style={{ cursor: "pointer" }}
                         >
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {pedido.clave}
+                            <p className="m-2"></p> {cliente.clave}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {pedido.nombre}
+                            <p className="m-2"></p> {cliente.nombre}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {pedido.fechaUltimoPago}
+                            <p className="m-2"></p> {cliente.fechaUltimoPago}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {pedido.fechaProximoPago}
+                            <p className="m-2"></p> {cliente.fechaProximoPago}
                           </td>
                         </tr>
                       ))}
