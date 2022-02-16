@@ -5,7 +5,16 @@ import Footer from "./footer";
 const LayoutLogin = (props) => (
   <div className="Layout">
     <Header />
-    <div className="Content">{props.children}</div>
+    <div
+      style={{
+        backgroundImage: "url(fondo-login.jpeg)",
+        backgroundSize: "cover",
+        minHeight: "30rem",
+      }}
+      className="Content p-5"
+    >
+      {props.children}
+    </div>
     <Footer />
   </div>
 );

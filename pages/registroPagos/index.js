@@ -4,7 +4,7 @@ import Tabla from "../../components/matricula/tabla/tabla";
 
 const Index = () => {
   return (
-    <Layout tituloNav={"Registro de Pagos"} tipoUsuario={1}>
+    <Layout tituloNav={"Registro de pagos"} tipoUsuario={1}>
       <Container>
       </Container>
     </Layout>
