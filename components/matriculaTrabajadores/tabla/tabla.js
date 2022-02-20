@@ -25,58 +25,34 @@ import { useRouter } from "next/dist/client/router";
 
 const dataPrueba = [
   {
-    clave: "CLIENT-0001",
     nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
+    fechaActualizacion: "15-05-2022",
+    usuario: "user",
+    tipo: "Trabajador"
   },
   {
-    clave: "CLIENT-0002",
     nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
+    fechaActualizacion: "15-05-2022",
+    usuario: "user",
+    tipo: "Trabajador"
   },
   {
-    clave: "CLIENT-0003",
     nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
+    fechaActualizacion: "15-05-2022",
+    usuario: "user",
+    tipo: "Trabajador"
   },
   {
-    clave: "CLIENT-0004",
     nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
+    fechaActualizacion: "15-05-2022",
+    usuario: "user",
+    tipo: "Trabajador"
   },
   {
-    clave: "CLIENT-0005",
     nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0002",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0003",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0004",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0005",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
+    fechaActualizacion: "15-05-2022",
+    usuario: "user",
+    tipo: "Trabajador"
   },
 ];
 
@@ -89,7 +65,6 @@ const Tabla = () => {
     faCaretDown,
     faCaretDown,
     faCaretDown,
-    faCaretDown,
   ]);
   const [loading, setLoading] = useState(false);
 
@@ -97,9 +72,9 @@ const Tabla = () => {
 
   const handleNextPage = (producto) => {
     router.push({
-      pathname: "/cliente",
+      pathname: "/trabajadorUnico",
       query: {
-        idCliente: 1,
+        idTrabajador: 1,
       },
     });
   };
@@ -152,10 +127,9 @@ const Tabla = () => {
   };
 
   const campos = [
-    { id: 1, nombre: "Clave", nombreVar: "clave" },
-    { id: 2, nombre: "Nombre", nombreVar: "nombre" },
-    { id: 3, nombre: "Fecha Último Pago", nombreVar: "fechaUltimoPago" },
-    { id: 4, nombre: "Fecha Próximo Pago", nombreVar: "fechaProximoPago" },
+    { id: 1, nombre: "Nombre", nombreVar: "nombre" },
+    { id: 2, nombre: "Fecha actualización", nombreVar: "fechaActualizacion" },
+    { id: 3, nombre: "Usuario", nombreVar: "usuario" },
   ];
 
   const filtrarElementos = (terminoBusqueda) => {
@@ -256,16 +230,13 @@ const Tabla = () => {
                           style={{ cursor: "pointer" }}
                         >
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.clave}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
                             <p className="m-2"></p> {cliente.nombre}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.fechaUltimoPago}
+                            <p className="m-2"></p> {cliente.fechaActualizacion}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.fechaProximoPago}
+                            <p className="m-2"></p> {cliente.usuario}
                           </td>
                         </tr>
                       ))}

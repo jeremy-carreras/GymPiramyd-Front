@@ -8,7 +8,6 @@ import {
 } from "react-bootstrap";
 import styles from "./formularioPago.module.css";
 import { useState } from "react";
-import { faL } from "@fortawesome/free-solid-svg-icons";
 
 //const PRECIO_SEMANA = process.env.PRECIO_SEMANA;
 const PRECIO_SEMANA = 100;
@@ -40,7 +39,7 @@ const FormularioPago = () => {
   return (
     <Container
       style={{ backgroundColor: "#fff" }}
-      className={`${styles.shadow} rounded w-75 px-4 my-5`}
+      className={`${styles.shadow} rounded col-12 col-md-11 col-lg-10 col-xl-9 col-xxl-8 my-5`}
     >
       <p className="h2 p-4">Pagos</p>
       <Row className="px-4 pb-3">

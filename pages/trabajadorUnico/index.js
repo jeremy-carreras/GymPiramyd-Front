@@ -1,16 +1,16 @@
 import { Container } from "react-bootstrap";
 import Layout from "/components/layouts/layout";
-import Tabla from "../../components/registroPagos/tabla/tabla";
+import InfoCard from "../../components/trabajadorUnico/infoCard";
 
 const Index = () => {
   return (
     <Layout
-      tituloNav={"Registro de pagos"}
+      tituloNav={"User"}
       tipoUsuario={1}
-      urlBackground={"url(fondo-registroPagos.jpeg)"}
+      urlBackground={"url(fondo-pago.jpeg)"}
     >
-      <Container>
-        <Tabla></Tabla>
+      <Container style={{ minHeight: "30rem" }}>
+        <InfoCard></InfoCard>
       </Container>
     </Layout>
   );

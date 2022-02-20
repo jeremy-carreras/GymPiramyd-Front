@@ -1,11 +1,16 @@
 import { Container } from "react-bootstrap";
 import Layout from "/components/layouts/layout";
-import Tabla from "../../components/matricula/tabla/tabla";
+import FormularioAltaTrabajador from "../../components/altaTrabajador/formularioAltaTrabajador";
 
 const Index = () => {
   return (
-    <Layout tituloNav={"Alta de trabajador"} tipoUsuario={1}>
+    <Layout
+      tituloNav={"Alta de un trabajador"}
+      tipoUsuario={1}
+      urlBackground={"url(fondo-altaTrabajador.jpeg)"}
+    >
       <Container>
+        <FormularioAltaTrabajador></FormularioAltaTrabajador>
       </Container>
     </Layout>
   );

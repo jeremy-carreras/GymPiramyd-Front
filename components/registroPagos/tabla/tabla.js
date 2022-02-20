@@ -2,7 +2,6 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Container,
   Table,
-  Button,
   InputGroup,
   FormControl,
   Row,
@@ -25,58 +24,40 @@ import { useRouter } from "next/dist/client/router";
 
 const dataPrueba = [
   {
-    clave: "CLIENT-0001",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
+    folio: "FS-1",
+    fechaPago: "15-05-2022",
+    nombreCliente: "Jeremy Carreras",
+    nombreTrabajador: "Trabajador",
+    nombrePlan: "Semanal",
+    cantidad: 1,
+    monto: 100,
   },
   {
-    clave: "CLIENT-0002",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
+    folio: "FM-1",
+    fechaPago: "15-05-2022",
+    nombreCliente: "Jeremy Carreras",
+    nombreTrabajador: "Trabajador",
+    nombrePlan: "Mensual",
+    cantidad: 1,
+    monto: 250,
   },
   {
-    clave: "CLIENT-0003",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
+    folio: "FM-2",
+    fechaPago: "15-05-2022",
+    nombreCliente: "Jeremy Carreras",
+    nombreTrabajador: "Trabajador",
+    nombrePlan: "Mensual",
+    cantidad: 1,
+    monto: 250,
   },
   {
-    clave: "CLIENT-0004",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0005",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0002",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0003",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0004",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0005",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
+    folio: "FS-2",
+    fechaPago: "15-05-2022",
+    nombreCliente: "Jeremy Carreras",
+    nombreTrabajador: "Trabajador",
+    nombrePlan: "Semanal",
+    cantidad: 1,
+    monto: 100,
   },
 ];
 
@@ -90,6 +71,9 @@ const Tabla = () => {
     faCaretDown,
     faCaretDown,
     faCaretDown,
+    faCaretDown,
+    faCaretDown,
+    faCaretDown,
   ]);
   const [loading, setLoading] = useState(false);
 
@@ -97,9 +81,9 @@ const Tabla = () => {
 
   const handleNextPage = (producto) => {
     router.push({
-      pathname: "/cliente",
+      pathname: "/pagoUnico",
       query: {
-        idCliente: 1,
+        idPago: 1,
       },
     });
   };
@@ -152,17 +136,24 @@ const Tabla = () => {
   };
 
   const campos = [
-    { id: 1, nombre: "Clave", nombreVar: "clave" },
-    { id: 2, nombre: "Nombre", nombreVar: "nombre" },
-    { id: 3, nombre: "Fecha Último Pago", nombreVar: "fechaUltimoPago" },
-    { id: 4, nombre: "Fecha Próximo Pago", nombreVar: "fechaProximoPago" },
+    { id: 1, nombre: "Folio", nombreVar: "folio" },
+    { id: 2, nombre: "Fecha de pago", nombreVar: "fechaPago" },
+    { id: 3, nombre: "Nombre del cliente", nombreVar: "nombreCliente" },
+    { id: 4, nombre: "Nombre del trabajdor", nombreVar: "nombreTrabajador" },
+    { id: 5, nombre: "Plazo", nombreVar: "nombrePlan" },
+    { id: 6, nombre: "Cantidad", nombreVar: "cantidad" },
+    { id: 7, nombre: "Monto", nombreVar: "monto" },
   ];
 
   const filtrarElementos = (terminoBusqueda) => {
     let search = dataCompleta.filter((item) => {
       if (
-        item.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        item.clave.toLowerCase().includes(terminoBusqueda.toLowerCase())
+        item.folio.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+        item.fechaPago.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+        String(item.nombreCliente).toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+        String(item.nombreTrabajador).toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+        String(item.nombrePlan).toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+        String(item.monto).toLowerCase().includes(terminoBusqueda.toLowerCase())
       ) {
         return item;
       }
@@ -180,7 +171,7 @@ const Tabla = () => {
 
   return (
     <Container
-      style={{ backgroundColor: "#fff", width: "85%" }}
+      style={{ backgroundColor: "#fff" }}
       className={`${styles.container} ${styles.shadow} rounded my-5`}
     >
       {loading ? (
@@ -198,7 +189,7 @@ const Tabla = () => {
               <div style={{ textAlign: "left", width: "15rem" }}>
                 <InputGroup className="mt-2" size="sm">
                   <FormControl
-                    placeholder="Clave, Nombre"
+                    placeholder="Folio, fecha, nombre, monto"
                     value={busqueda}
                     onChange={(value) => {
                       setBusqueda(value.target.value);
@@ -256,16 +247,25 @@ const Tabla = () => {
                           style={{ cursor: "pointer" }}
                         >
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.clave}
+                            <p className="m-2"></p> {cliente.folio}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.nombre}
+                            <p className="m-2"></p> {cliente.fechaPago}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.fechaUltimoPago}
+                            <p className="m-2"></p> {cliente.nombreCliente}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.fechaProximoPago}
+                            <p className="m-2"></p> {cliente.nombreTrabajador}
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            <p className="m-2"></p> {cliente.nombrePlan}
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            <p className="m-2"></p> {cliente.cantidad}
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            <p className="m-2"></p> ${cliente.monto}.00
                           </td>
                         </tr>
                       ))}

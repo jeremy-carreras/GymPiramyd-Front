@@ -49,7 +49,7 @@ const Login = () => {
           </Col>
           <Col className="col-12 mb-1">
             <FormControl
-              name="fechaNacimiento"
+              name="password"
               placeholder="Constraseña"
               onChange={handleInputChange}
             />

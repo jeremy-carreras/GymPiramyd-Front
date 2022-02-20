@@ -69,6 +69,10 @@ const Nav = (props) => {
                 <a className={`${styles.link} my-5`}>Alta de trabajador</a>
               </Link>
               <br />
+              <Link href="/matriculaTrabajadores">
+                <a className={`${styles.link} my-5`}>Trabajadores</a>
+              </Link>
+              <br />
             </div>
           ) : (
             <></>
