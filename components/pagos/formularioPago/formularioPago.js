@@ -105,10 +105,10 @@ const FormularioPago = () => {
         </Col>
       </Row>
       <Row className="px-4 pb-3">
-        <Col className="col-12 col-sm-6 col-md-4 col-lg-3 col-xxl-2">
+        <Col className="col-12 col-sm-6 col-md-4 col-lg-3">
           <h5 className="pt-1">ID del cliente:</h5>
         </Col>
-        <Col className="col-12 col-sm-6 col-md-8 col-lg-9 col-xxl-10">
+        <Col className="col-12 col-sm-6 col-md-8 col-lg-9">
           <FormControl
             value={idCliente}
             onChange={(value) => {
@@ -118,7 +118,7 @@ const FormularioPago = () => {
         </Col>
       </Row>
       <Row className="px-4 pb-4">
-        <Col className="col-4 col-sm-4 col-md-4 col-lg-3 col-xxl-2">
+        <Col className="col-4 col-sm-4 col-md-4 col-lg-3">
           <h5>Monto:</h5>
         </Col>
         <Col>{monto != 0 ? <h5>${monto}.00</h5> : <></>}</Col>

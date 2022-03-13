@@ -180,7 +180,7 @@ const Tabla = () => {
 
   return (
     <Container
-      style={{ backgroundColor: "#fff", width: "85%" }}
+      style={{ backgroundColor: "#fff" }}
       className={`${styles.container} ${styles.shadow} rounded my-5`}
     >
       {loading ? (

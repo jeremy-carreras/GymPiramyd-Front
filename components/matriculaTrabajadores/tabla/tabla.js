@@ -136,7 +136,7 @@ const Tabla = () => {
     let search = dataCompleta.filter((item) => {
       if (
         item.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        item.clave.toLowerCase().includes(terminoBusqueda.toLowerCase())
+        item.usuario.toLowerCase().includes(terminoBusqueda.toLowerCase())
       ) {
         return item;
       }
@@ -154,7 +154,7 @@ const Tabla = () => {
 
   return (
     <Container
-      style={{ backgroundColor: "#fff", width: "85%" }}
+      style={{ backgroundColor: "#fff" }}
       className={`${styles.container} ${styles.shadow} rounded my-5`}
     >
       {loading ? (
@@ -172,7 +172,7 @@ const Tabla = () => {
               <div style={{ textAlign: "left", width: "15rem" }}>
                 <InputGroup className="mt-2" size="sm">
                   <FormControl
-                    placeholder="Clave, Nombre"
+                    placeholder="Nombre, usuario"
                     value={busqueda}
                     onChange={(value) => {
                       setBusqueda(value.target.value);
