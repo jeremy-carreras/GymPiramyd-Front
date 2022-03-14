@@ -67,13 +67,13 @@ const FormularioInscripciones = () => {
         <Col className="col-12">
           <h5>Tipo de sangre:</h5>
         </Col>
-        <Col className="col-12 mb-3">
+        <Col className="col-12 mb-4">
           <FormControl name="tipoSangre" onChange={handleInputChange} />
         </Col>
-      </Row>
-      <Row className="pb-4 text-center">
-        <Col>
-          <Button onClick={inscribir}>Aceptar</Button>
+        <Col className="col-12 mb-3">
+          <Button className="w-100" onClick={inscribir}>
+            Aceptar
+          </Button>
         </Col>
       </Row>
     </Container>

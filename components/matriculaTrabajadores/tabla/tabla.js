@@ -16,6 +16,7 @@ import {
 import styles from "./tabla.module.css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
+import ModalEditar from "../modal/modalEditar";
 //import SpinnerLoading from "../general/spinnerLoading";
 //import moment from "moment";
 //import axios from "axios";
@@ -25,34 +26,54 @@ import { useRouter } from "next/dist/client/router";
 
 const dataPrueba = [
   {
-    nombre: "Nombre Apellido1 Apellido2",
+    nombre: "Jeremy Carreras",
     fechaActualizacion: "15-05-2022",
-    usuario: "user",
-    tipo: "Trabajador"
+    usuario: "jeremy",
+    tipo: "Trabajador",
+    password: "password",
+    direccion: "Calle No. 1234",
+    tipoUsuario: "Admin",
+    telefono: "12345678",
+  },
+  {
+    nombre: "Marco Romero",
+    fechaActualizacion: "15-05-2022",
+    usuario: "marco",
+    tipo: "Trabajador",
+    password: "password",
+    direccion: "Calle No. 1234",
+    tipoUsuario: "Admin",
+    telefono: "12345678",
   },
   {
     nombre: "Nombre Apellido1 Apellido2",
     fechaActualizacion: "15-05-2022",
     usuario: "user",
-    tipo: "Trabajador"
+    tipo: "Trabajador",
+    password: "password",
+    direccion: "Calle No. 1234",
+    tipoUsuario: "Admin",
+    telefono: "12345678",
   },
   {
     nombre: "Nombre Apellido1 Apellido2",
     fechaActualizacion: "15-05-2022",
     usuario: "user",
-    tipo: "Trabajador"
+    tipo: "Trabajador",
+    password: "password",
+    direccion: "Calle No. 1234",
+    tipoUsuario: "Admin",
+    telefono: "12345678",
   },
   {
     nombre: "Nombre Apellido1 Apellido2",
     fechaActualizacion: "15-05-2022",
     usuario: "user",
-    tipo: "Trabajador"
-  },
-  {
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaActualizacion: "15-05-2022",
-    usuario: "user",
-    tipo: "Trabajador"
+    tipo: "Trabajador",
+    password: "password",
+    direccion: "Calle No. 1234",
+    tipoUsuario: "Admin",
+    telefono: "12345678",
   },
 ];
 
@@ -61,12 +82,10 @@ const Tabla = () => {
   const [data, setData] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [reverse, setReverse] = useState(false);
-  const [caret] = useState([
-    faCaretDown,
-    faCaretDown,
-    faCaretDown,
-  ]);
+  const [caret] = useState([faCaretDown, faCaretDown, faCaretDown]);
   const [loading, setLoading] = useState(false);
+  const [showModalEditar, setShowModalEditar] = useState(false);
+  const [dataEditar, setDataEditar] = useState({});
 
   const router = useRouter();
 
@@ -77,6 +96,10 @@ const Tabla = () => {
         idTrabajador: 1,
       },
     });
+  };
+
+  const handleCloseModalEditar = () => {
+    setShowModalEditar(!showModalEditar);
   };
 
   useEffect(() => {
@@ -225,7 +248,9 @@ const Tabla = () => {
                         <tr
                           key={index}
                           onClick={() => {
-                            handleNextPage(cliente);
+                            //handleNextPage(cliente);
+                            setDataEditar(dataCompleta[index]);
+                            setShowModalEditar(!showModalEditar);
                           }}
                           style={{ cursor: "pointer" }}
                         >
@@ -248,6 +273,12 @@ const Tabla = () => {
           )}
         </div>
       )}
+      <ModalEditar
+        show={showModalEditar}
+        handleClose={handleCloseModalEditar}
+        dataTrabajador={dataEditar}
+        setDataTrabajador={setDataEditar}
+      ></ModalEditar>
     </Container>
   );
 };
