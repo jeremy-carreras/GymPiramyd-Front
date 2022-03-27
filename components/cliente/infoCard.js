@@ -14,19 +14,10 @@ import {
   faEyeSlash,
   faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
+import moment from "moment";
 
-const dataPrueba = {
-  nombre: "Jeremy Carreras",
-  fechaNacimiento: "2022-02-19",
-  correo: "correo@unam.mx",
-  telefono: "5549593871",
-  fechaUltimoPago: "2022-03-13",
-  fechaProximoPago: "2022-03-13",
-  tipoSangre: "O+",
-};
-
-const InfoCard = () => {
-  const [dataCliente, setDataCliente] = useState(dataPrueba);
+const InfoCard = (props) => {
+  const [dataCliente, setDataCliente] = useState({});
   const [visible, setVisible] = useState(false);
   const [correo, setCorreo] = useState("");
   const [showEdit, setShowEdit] = useState(false);
@@ -37,21 +28,6 @@ const InfoCard = () => {
 
   const handelEdit = () => {
     setShowEdit(!showEdit);
-  };
-
-  const handleInputsChange = (event) => {
-    /*setDataEditar({
-      ...dataEditar,
-      [event.target.name]: event.target.value,
-    });*/
-    setDataCliente({
-      ...dataCliente,
-      [event.target.name]: event.target.value,
-    });
-  };
-
-  const handleSubmit = () => {
-    console.log(dataCliente);
   };
 
   return (
@@ -82,54 +58,56 @@ const InfoCard = () => {
             <Form.Control
               type="text"
               name="nombre"
-              onChange={handleInputsChange}
+              onChange={props.handleInputsChange}
               placeholder="Nombre"
-              defaultValue={dataCliente.nombre}
+              defaultValue={props.dataCliente.nombre}
             />
           </FloatingLabel>
           <FloatingLabel label="Fecha de nacimiento" className="mb-3">
             <Form.Control
               type="date"
               name="fechaNacimiento"
-              onChange={handleInputsChange}
+              onChange={props.handleInputsChange}
               placeholder="Fecha de nacimiento"
-              defaultValue={dataCliente.fechaNacimiento}
+              defaultValue={moment(props.dataCliente.fechaNacimiento).format(
+                "YYYY-MM-DD"
+              )}
             />
           </FloatingLabel>
           <FloatingLabel label="Correo" className="mb-3">
             <Form.Control
               type="email"
               name="correo"
-              onChange={handleInputsChange}
+              onChange={props.handleInputsChange}
               placeholder="Correo"
-              defaultValue={dataCliente.correo}
+              defaultValue={props.dataCliente.correo}
             />
           </FloatingLabel>
           <FloatingLabel label="Teléfono" className="mb-3">
             <Form.Control
               type="text"
               name="telefono"
-              onChange={handleInputsChange}
+              onChange={props.handleInputsChange}
               placeholder="Teléfono"
-              defaultValue={dataCliente.telefono}
+              defaultValue={props.dataCliente.telefono}
             />
           </FloatingLabel>
           <FloatingLabel label="Teléfono de emergencia" className="mb-3">
             <Form.Control
               type="text"
               name="telefonoEmergencia"
-              onChange={handleInputsChange}
+              onChange={props.handleInputsChange}
               placeholder="Teléfono de emergencia"
-              defaultValue={dataCliente.telefonoEmergencia}
+              defaultValue={props.dataCliente.telefonoEmergencia}
             />
           </FloatingLabel>
           <FloatingLabel label="Tipo de sangre" className="mb-3">
             <Form.Control
               type="text"
               name="tipoSangre"
-              onChange={handleInputsChange}
+              onChange={props.handleInputsChange}
               placeholder="Tipo de sangre"
-              defaultValue={dataCliente.tipoSangre}
+              defaultValue={props.dataCliente.tipoSangre}
             />
           </FloatingLabel>
         </div>
@@ -140,7 +118,7 @@ const InfoCard = () => {
               <h5>Nombre:</h5>
             </Col>
             <Col className="col-12 col-sm-8">
-              <h5 style={{ fontWeight: "300" }}>{dataCliente.nombre}</h5>
+              <h5 style={{ fontWeight: "300" }}>{props.dataCliente.nombre}</h5>
             </Col>
           </Row>
           <Row className="px-4 pb-3">
@@ -149,7 +127,7 @@ const InfoCard = () => {
             </Col>
             <Col className="col-12 col-sm-8">
               <h5 style={{ fontWeight: "300" }}>
-                {dataCliente.fechaNacimiento}
+                {moment(props.dataCliente.fechaNacimiento).format("YYYY-MM-DD")}
               </h5>
             </Col>
           </Row>
@@ -158,7 +136,7 @@ const InfoCard = () => {
               <h5>Correo:</h5>
             </Col>
             <Col className="col-12 col-sm-8">
-              <h5 style={{ fontWeight: "300" }}>{dataCliente.correo}</h5>
+              <h5 style={{ fontWeight: "300" }}>{props.dataCliente.correo}</h5>
             </Col>
           </Row>
           <Row className="px-4 pb-3">
@@ -166,7 +144,9 @@ const InfoCard = () => {
               <h5>Teléfono:</h5>
             </Col>
             <Col className="col-12 col-sm-8">
-              <h5 style={{ fontWeight: "300" }}>{dataCliente.telefono}</h5>
+              <h5 style={{ fontWeight: "300" }}>
+                {props.dataCliente.telefono}
+              </h5>
             </Col>
           </Row>
           {dataCliente.telefonoEmergencia ? (
@@ -176,7 +156,7 @@ const InfoCard = () => {
               </Col>
               <Col className="col-12 col-sm-8">
                 <h5 style={{ fontWeight: "300" }}>
-                  {dataCliente.telefonoEmergencia}
+                  {props.dataCliente.telefonoEmergencia}
                 </h5>
               </Col>
             </Row>
@@ -188,9 +168,15 @@ const InfoCard = () => {
               <h5>Fecha de último pago:</h5>
             </Col>
             <Col className="col-12 col-sm-8">
-              <h5 style={{ fontWeight: "300" }}>
-                {dataCliente.fechaUltimoPago}
-              </h5>
+              {props.dataCliente.fechaUltimoPago ? (
+                <h5 style={{ fontWeight: "300" }}>
+                  {moment(props.dataCliente.fechaUltimoPago).format(
+                    "YYYY-MM-DD"
+                  )}
+                </h5>
+              ) : (
+                <h5 style={{ fontWeight: "300" }}>No se tiene registro</h5>
+              )}
             </Col>
           </Row>
           <Row className="px-4 pb-3">
@@ -198,9 +184,15 @@ const InfoCard = () => {
               <h5>Fecha de próximo pago:</h5>
             </Col>
             <Col className="col-12 col-sm-8">
-              <h5 style={{ fontWeight: "300" }}>
-                {dataCliente.fechaProximoPago}
-              </h5>
+              {props.dataCliente.fechaProximoPago ? (
+                <h5 style={{ fontWeight: "300" }}>
+                  {moment(props.dataCliente.fechaProximoPago).format(
+                    "YYYY-MM-DD"
+                  )}
+                </h5>
+              ) : (
+                <h5 style={{ fontWeight: "300" }}>No se tiene registro</h5>
+              )}
             </Col>
           </Row>
           <Row className="px-4 pb-3">
@@ -208,7 +200,9 @@ const InfoCard = () => {
               <h5>Tipo de sangre:</h5>
             </Col>
             <Col className="col-12 col-sm-8">
-              <h5 style={{ fontWeight: "300" }}>{dataCliente.tipoSangre}</h5>
+              <h5 style={{ fontWeight: "300" }}>
+                {props.dataCliente.tipoSangre}
+              </h5>
             </Col>
           </Row>
         </div>
@@ -219,7 +213,14 @@ const InfoCard = () => {
             <Button onClick={handelEdit} className="mx-2" variant="danger">
               Cancelar
             </Button>
-            <Button onClick={handleSubmit} className="mx-2" variant="success">
+            <Button
+              onClick={() => {
+                props.modificarCliente();
+                setShowEdit(!showEdit);
+              }}
+              className="mx-2"
+              variant="success"
+            >
               Acpetar
             </Button>
           </Col>

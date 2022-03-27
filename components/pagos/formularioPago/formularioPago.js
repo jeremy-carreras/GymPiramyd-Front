@@ -100,6 +100,9 @@ const FormularioPago = () => {
               if (idPlan === 3) {
                 setMonto(parseInt(PRECIO_ANUAL) * parseInt(value.target.value));
               }
+              if (value.target.value === "") {
+                setMonto(0);
+              }
             }}
           />
         </Col>

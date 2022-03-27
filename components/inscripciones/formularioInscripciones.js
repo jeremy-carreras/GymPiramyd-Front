@@ -1,13 +1,16 @@
 import { Container, Row, Col, Button, FormControl } from "react-bootstrap";
 import styles from "./formularioInscripciones.module.css";
 import { useState } from "react";
+import axios from "axios";
+
+const urlApi = "http://localhost:8081";
 
 const FormularioInscripciones = () => {
   const [dataInscripcion, setDataInscripcion] = useState({
-    nombreCliente: "",
+    nombre: "",
     fechaNacimiento: "",
     telefono: "",
-    direccion: "",
+    telefonoEmergencia: "",
     correo: "",
     tipoSangre: "",
   });
@@ -19,8 +22,13 @@ const FormularioInscripciones = () => {
     });
   };
 
-  const inscribir = () => {
+  const inscribir = async () => {
     console.log(dataInscripcion);
+    try {
+      await axios.post(`${urlApi}/cliente/nuevo`, dataInscripcion);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (
@@ -34,7 +42,7 @@ const FormularioInscripciones = () => {
           <h5>Nombre:</h5>
         </Col>
         <Col className="col-12 mb-3">
-          <FormControl name="nombreCliente" onChange={handleInputChange} />
+          <FormControl name="nombre" onChange={handleInputChange} />
         </Col>
         <Col className="col-12">
           <h5>Fecha de nacimiento:</h5>
@@ -53,10 +61,10 @@ const FormularioInscripciones = () => {
           <FormControl name="telefono" onChange={handleInputChange} />
         </Col>
         <Col className="col-12">
-          <h5>Dirección:</h5>
+          <h5>Teléfono de emergencia:</h5>
         </Col>
         <Col className="col-12 mb-3">
-          <FormControl name="direccion" onChange={handleInputChange} />
+          <FormControl name="telefonoEmergencia" onChange={handleInputChange} />
         </Col>
         <Col className="col-12">
           <h5>Correo:</h5>

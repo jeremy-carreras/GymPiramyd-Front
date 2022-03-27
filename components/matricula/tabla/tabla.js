@@ -16,73 +16,18 @@ import {
 import styles from "./tabla.module.css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
+import axios from "axios";
 //import SpinnerLoading from "../general/spinnerLoading";
 //import moment from "moment";
 //import axios from "axios";
 //import { avisoError } from "../../funciones/avisos";
 
 //const urlApi = process.env.API_ROOT;
+const urlApi = "http://localhost:8081";
 
-const dataPrueba = [
-  {
-    clave: "CLIENT-0001",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0002",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0003",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0004",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0005",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0002",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0003",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0004",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-  {
-    clave: "CLIENT-0005",
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaUltimoPago: "15-05-2022",
-    fechaProximoPago: "15-05-2022",
-  },
-];
-
-const Tabla = () => {
-  const [dataCompleta, setDataCompleta] = useState([]);
-  const [data, setData] = useState([]);
+const Tabla = (props) => {
+  const [dataCompleta, setDataCompleta] = useState(props.dataCliente);
+  const [data, setData] = useState(props.dataCliente);
   const [busqueda, setBusqueda] = useState("");
   const [reverse, setReverse] = useState(false);
   const [caret] = useState([
@@ -95,39 +40,34 @@ const Tabla = () => {
 
   const router = useRouter();
 
-  const handleNextPage = (producto) => {
+  const handleNextPage = (id) => {
     router.push({
       pathname: "/cliente",
       query: {
-        idCliente: 1,
+        idCliente: id,
       },
     });
   };
 
+  /*useEffect(() => {
+    async function fetchData() {
+      setDataCompleta(props.dataCliente);
+      setData(props.dataCliente);
+      console.log(props.dataCliente);
+    }
+    fetchData();
+  }, []);*/
+
   useEffect(() => {
     async function fetchData() {
-      setDataCompleta(dataPrueba);
-      setData(dataPrueba);
-      /*try {
-        const response = await axios.get(`${urlApi}/adscripciones/pedidos`, {
-          params: {
-            idAdscripcion: localStorage.getItem("id_adscripcion"),
-          },
-        });
-        setLoading(false);
-        setReverse(true);
-        ordenar(response.data, "fecha_evento");
-        for (let index in response.data) {
-          response.data[index].pCola = index;
-        }
-        setReverse(false);
+      try {
+        const response = await axios.get(`${urlApi}/cliente/clientes`);
         setDataCompleta(response.data);
         setData(response.data);
+        //console.log(response.data);
       } catch (error) {
-        setLoading(false);
-        avisoError("No fue posible cargar los pedidos");
         console.log(error);
-      }*/
+      }
     }
     fetchData();
   }, []);
@@ -152,17 +92,17 @@ const Tabla = () => {
   };
 
   const campos = [
-    { id: 1, nombre: "Clave", nombreVar: "clave" },
+    { id: 1, nombre: "Clave", nombreVar: "idCliente" },
     { id: 2, nombre: "Nombre", nombreVar: "nombre" },
-    { id: 3, nombre: "Fecha Último Pago", nombreVar: "fechaUltimoPago" },
-    { id: 4, nombre: "Fecha Próximo Pago", nombreVar: "fechaProximoPago" },
+    { id: 3, nombre: "Fecha de último pago", nombreVar: "fechaUltimoPago" },
+    { id: 4, nombre: "Fecha de próximo pago", nombreVar: "fechaProximoPago" },
   ];
 
   const filtrarElementos = (terminoBusqueda) => {
     let search = dataCompleta.filter((item) => {
       if (
         item.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        item.clave.toLowerCase().includes(terminoBusqueda.toLowerCase())
+        String(item.idCliente).toLowerCase().includes(terminoBusqueda.toLowerCase())
       ) {
         return item;
       }
@@ -181,7 +121,7 @@ const Tabla = () => {
   return (
     <Container
       style={{ backgroundColor: "#fff" }}
-      className={`${styles.container} ${styles.shadow} rounded my-5`}
+      className={`${styles.container} ${styles.shadow} rounded my-3`}
     >
       {loading ? (
         <div style={{ textAlign: "center", marginTop: "200px" }}>
@@ -190,8 +130,10 @@ const Tabla = () => {
       ) : (
         <div>
           {dataCompleta.length === 0 ? (
-            <Row style={{ textAlign: "center", margin: "200px 0 200px 0" }}>
-              <p className="h2">No hay registros</p>
+            <Row style={{ textAlign: "center" }}>
+              <p className="h2" style={{ marginTop: "12rem" }}>
+                No hay registros
+              </p>
             </Row>
           ) : (
             <div className="p-4">
@@ -220,10 +162,10 @@ const Tabla = () => {
               ) : (
                 <div
                   style={{
-                    marginTop: "30px",
-                    overflow: "scroll",
-                    maxHeight: "25rem",
-                    minHeight: "12rem",
+                    marginTop: "1.5rem",
+                    //overflow: "scroll",
+                    //maxHeight: "25rem",
+                    //minHeight: "12rem",
                   }}
                 >
                   <Table hover responsive className="table table-striped">
@@ -251,21 +193,31 @@ const Tabla = () => {
                         <tr
                           key={index}
                           onClick={() => {
-                            handleNextPage(cliente);
+                            handleNextPage(cliente.idCliente);
                           }}
                           style={{ cursor: "pointer" }}
                         >
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.clave}
+                            <p className="m-2"></p> {cliente.idCliente}
                           </td>
                           <td style={{ textAlign: "center" }}>
                             <p className="m-2"></p> {cliente.nombre}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.fechaUltimoPago}
+                            <p className="m-2"></p>
+                            {cliente.fechaUltimoPago ? (
+                              <p>{cliente.fechaUltimoPago}</p>
+                            ) : (
+                              <p>No hay registros</p>
+                            )}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.fechaProximoPago}
+                            <p className="m-2"></p>
+                            {cliente.fechaProximoPago ? (
+                              <p>{cliente.fechaProximoPago}</p>
+                            ) : (
+                              <p>No hay registros</p>
+                            )}
                           </td>
                         </tr>
                       ))}
