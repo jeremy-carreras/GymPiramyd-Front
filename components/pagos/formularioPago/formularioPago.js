@@ -7,12 +7,22 @@ import {
   Dropdown,
 } from "react-bootstrap";
 import styles from "./formularioPago.module.css";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import {
+  avisoError,
+  avisoExito,
+  avisoFalta,
+  avisoLoading,
+  cerrarLoading,
+} from "../../../funciones/avisos";
+import axios from "axios";
 
 //const PRECIO_SEMANA = process.env.PRECIO_SEMANA;
 const PRECIO_SEMANA = 100;
 const PRECIO_MES = 250;
 const PRECIO_ANUAL = 1000;
+
+const urlApi = "http://localhost:3000";
 
 const FormularioPago = () => {
   const [idPlan, setIdPlan] = useState(null);
@@ -22,18 +32,56 @@ const FormularioPago = () => {
   const [selectedPago, setSelectedPago] = useState(
     "Seleccione el plan de pago"
   );
-  const [disabled, setDisabled] = useState([true]);
+  const [disabled] = useState([true]);
+  const [dataPlan, setDataPlan] = useState([]);
+  const [idTrabajador, setIdTrabajador] = useState(null);
+
+  useEffect(() => {
+    async function getData() {
+      try {
+        const response = await axios.get(`${urlApi}/Plan/planes`);
+        setDataPlan(response.data);
+      } catch (error) {
+        avisoError("No fue posible cargar los datos de los planes");
+        console.log(error);
+      }
+      const params = new URLSearchParams(window.location.search);
+      const idURL = params.get("idCliente") || "";
+      setIdCliente(idURL);
+      setIdTrabajador(parseInt(localStorage.getItem("idTrabajador")));
+    }
+    getData();
+  }, []);
 
   const dataPago = {
     idPlan: idPlan,
     cantidad: cantidad,
-    idCliente: idCliente,
+    idCliente: parseInt(idCliente),
     monto: monto,
-    idTrabajador: null,
+    idTrabajador: idTrabajador,
   };
 
-  const pagar = () => {
+  const pagar = async () => {
     console.log(dataPago);
+    if (
+      !dataPago.idPlan ||
+      !dataPago.cantidad === 0 ||
+      !dataPago.idCliente === "" ||
+      !dataPago.monto === 0 ||
+      !dataPago.idTrabajador
+    ) {
+      avisoFalta("Algún campo está vacío");
+      return;
+    }
+    avisoLoading();
+    try {
+      await axios.post(`${urlApi}/Pago/nuevo`, dataPago);
+      await avisoExito();
+    } catch (error) {
+      console.log(error);
+      await avisoError("No fue posible realizar el pago");
+    }
+    cerrarLoading();
   };
 
   return (
@@ -55,26 +103,18 @@ const FormularioPago = () => {
             <Dropdown.Menu
               style={{ width: "100%" }}
               onClick={(event) => {
-                setIdPlan(parseInt(event.target.id));
-                if (parseInt(event.target.id) === 1) {
-                  setSelectedPago("Semana");
-                  setMonto(PRECIO_SEMANA);
-                }
-                if (parseInt(event.target.id) === 2) {
-                  setSelectedPago("Mensual");
-                  setMonto(PRECIO_MES);
-                }
-                if (parseInt(event.target.id) === 3) {
-                  setSelectedPago("Anual");
-                  setMonto(PRECIO_ANUAL);
-                }
+                setIdPlan(parseInt(event.target.id) + 1);
+                setSelectedPago(dataPlan[event.target.id].nombre);
+                setMonto(parseInt(dataPlan[event.target.id].precio));
                 disabled[0] = false;
                 setCantidad(1);
               }}
             >
-              <Dropdown.Item id={1}>Semanal</Dropdown.Item>
-              <Dropdown.Item id={2}>Mensual</Dropdown.Item>
-              <Dropdown.Item id={3}>Anual</Dropdown.Item>
+              {dataPlan.map((plan, index) => (
+                <Dropdown.Item key={index} id={index}>
+                  {plan.nombre}
+                </Dropdown.Item>
+              ))}
             </Dropdown.Menu>
           </Dropdown>
         </Col>

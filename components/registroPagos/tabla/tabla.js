@@ -6,7 +6,6 @@ import {
   FormControl,
   Row,
 } from "react-bootstrap";
-import Swal from "sweetalert2";
 import {
   faCaretDown,
   faSearch,
@@ -16,54 +15,16 @@ import styles from "./tabla.module.css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
 //import SpinnerLoading from "../general/spinnerLoading";
-//import moment from "moment";
-//import axios from "axios";
-//import { avisoError } from "../../funciones/avisos";
+import moment from "moment";
+import axios from "axios";
 
 //const urlApi = process.env.API_ROOT;
-
-const dataPrueba = [
-  {
-    folio: "FS-1",
-    fechaPago: "15-05-2022",
-    nombreCliente: "Jeremy Carreras",
-    nombreTrabajador: "Trabajador",
-    nombrePlan: "Semanal",
-    cantidad: 1,
-    monto: 100,
-  },
-  {
-    folio: "FM-1",
-    fechaPago: "15-05-2022",
-    nombreCliente: "Jeremy Carreras",
-    nombreTrabajador: "Trabajador",
-    nombrePlan: "Mensual",
-    cantidad: 1,
-    monto: 250,
-  },
-  {
-    folio: "FM-2",
-    fechaPago: "15-05-2022",
-    nombreCliente: "Jeremy Carreras",
-    nombreTrabajador: "Trabajador",
-    nombrePlan: "Mensual",
-    cantidad: 1,
-    monto: 250,
-  },
-  {
-    folio: "FS-2",
-    fechaPago: "15-05-2022",
-    nombreCliente: "Jeremy Carreras",
-    nombreTrabajador: "Trabajador",
-    nombrePlan: "Semanal",
-    cantidad: 1,
-    monto: 100,
-  },
-];
+const urlApi = "http://localhost:3000";
 
 const Tabla = () => {
   const [dataCompleta, setDataCompleta] = useState([]);
   const [data, setData] = useState([]);
+  const [dataPlan, setDataPlan] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [reverse, setReverse] = useState(false);
   const [caret] = useState([
@@ -88,32 +49,20 @@ const Tabla = () => {
     });
   };
 
-  useEffect(() => {
-    async function fetchData() {
-      setDataCompleta(dataPrueba);
-      setData(dataPrueba);
-      /*try {
-        const response = await axios.get(`${urlApi}/adscripciones/pedidos`, {
-          params: {
-            idAdscripcion: localStorage.getItem("id_adscripcion"),
-          },
-        });
-        setLoading(false);
-        setReverse(true);
-        ordenar(response.data, "fecha_evento");
-        for (let index in response.data) {
-          response.data[index].pCola = index;
-        }
-        setReverse(false);
-        setDataCompleta(response.data);
-        setData(response.data);
-      } catch (error) {
-        setLoading(false);
-        avisoError("No fue posible cargar los pedidos");
-        console.log(error);
-      }*/
+  async function getData() {
+    try {
+      const response = await axios.get(`${urlApi}/Pago/pagos`);
+      setDataCompleta(response.data);
+      setData(response.data);
+      //console.log(response.data);
+    } catch (error) {
+      avisoError("No fue posible cargar los pedidos");
+      console.log(error);
     }
-    fetchData();
+  }
+
+  useEffect(() => {
+    getData();
   }, []);
 
   function predicateBy(array) {
@@ -138,8 +87,8 @@ const Tabla = () => {
   const campos = [
     { id: 1, nombre: "Folio", nombreVar: "folio" },
     { id: 2, nombre: "Fecha de pago", nombreVar: "fechaPago" },
-    { id: 3, nombre: "Nombre del cliente", nombreVar: "nombreCliente" },
-    { id: 4, nombre: "Nombre del trabajdor", nombreVar: "nombreTrabajador" },
+    { id: 3, nombre: "Clave del cliente", nombreVar: "nombreCliente" },
+    { id: 4, nombre: "Clave del trabajdor", nombreVar: "nombreTrabajador" },
     { id: 5, nombre: "Plazo", nombreVar: "nombrePlan" },
     { id: 6, nombre: "Cantidad", nombreVar: "cantidad" },
     { id: 7, nombre: "Monto", nombreVar: "monto" },
@@ -150,9 +99,15 @@ const Tabla = () => {
       if (
         item.folio.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
         item.fechaPago.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        String(item.nombreCliente).toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        String(item.nombreTrabajador).toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        String(item.nombrePlan).toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
+        String(item.nombreCliente)
+          .toLowerCase()
+          .includes(terminoBusqueda.toLowerCase()) ||
+        String(item.nombreTrabajador)
+          .toLowerCase()
+          .includes(terminoBusqueda.toLowerCase()) ||
+        String(item.nombrePlan)
+          .toLowerCase()
+          .includes(terminoBusqueda.toLowerCase()) ||
         String(item.monto).toLowerCase().includes(terminoBusqueda.toLowerCase())
       ) {
         return item;
@@ -181,7 +136,7 @@ const Tabla = () => {
       ) : (
         <div>
           {dataCompleta.length === 0 ? (
-            <Row style={{ textAlign: "center", margin: "200px 0 200px 0" }}>
+            <Row style={{ textAlign: "center", padding: "200px 0 200px 0" }}>
               <p className="h2">No hay registros</p>
             </Row>
           ) : (
@@ -250,16 +205,17 @@ const Tabla = () => {
                             <p className="m-2"></p> {cliente.folio}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.fechaPago}
+                            <p className="m-2"></p>{" "}
+                            {moment(cliente.fechaPago).format("YYYY-MM-DD")}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.nombreCliente}
+                            <p className="m-2"></p> {cliente.idCliente}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.nombreTrabajador}
+                            <p className="m-2"></p> {cliente.Trabajador.nombre}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.nombrePlan}
+                            <p className="m-2"></p> {cliente.Plan.nombre}
                           </td>
                           <td style={{ textAlign: "center" }}>
                             <p className="m-2"></p> {cliente.cantidad}

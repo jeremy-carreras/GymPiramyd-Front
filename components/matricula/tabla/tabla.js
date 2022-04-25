@@ -18,12 +18,12 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
 import axios from "axios";
 //import SpinnerLoading from "../general/spinnerLoading";
-//import moment from "moment";
+import moment from "moment";
 //import axios from "axios";
 //import { avisoError } from "../../funciones/avisos";
 
 //const urlApi = process.env.API_ROOT;
-const urlApi = "http://localhost:8081";
+const urlApi = "http://localhost:3000";
 
 const Tabla = (props) => {
   const [dataCompleta, setDataCompleta] = useState(props.dataCliente);
@@ -102,7 +102,9 @@ const Tabla = (props) => {
     let search = dataCompleta.filter((item) => {
       if (
         item.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        String(item.idCliente).toLowerCase().includes(terminoBusqueda.toLowerCase())
+        String(item.idCliente)
+          .toLowerCase()
+          .includes(terminoBusqueda.toLowerCase())
       ) {
         return item;
       }
@@ -206,7 +208,11 @@ const Tabla = (props) => {
                           <td style={{ textAlign: "center" }}>
                             <p className="m-2"></p>
                             {cliente.fechaUltimoPago ? (
-                              <p>{cliente.fechaUltimoPago}</p>
+                              <p>
+                                {moment(cliente.fechaUltimoPago).format(
+                                  "YYYY-MM-DD"
+                                )}
+                              </p>
                             ) : (
                               <p>No hay registros</p>
                             )}
@@ -214,7 +220,11 @@ const Tabla = (props) => {
                           <td style={{ textAlign: "center" }}>
                             <p className="m-2"></p>
                             {cliente.fechaProximoPago ? (
-                              <p>{cliente.fechaProximoPago}</p>
+                              <p>
+                                {moment(cliente.fechaProximoPago).format(
+                                  "YYYY-MM-DD"
+                                )}
+                              </p>
                             ) : (
                               <p>No hay registros</p>
                             )}

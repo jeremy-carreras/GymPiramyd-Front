@@ -2,12 +2,11 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Container,
   Table,
-  Button,
   InputGroup,
   FormControl,
   Row,
 } from "react-bootstrap";
-import Swal from "sweetalert2";
+import axios from "axios";
 import {
   faCaretDown,
   faSearch,
@@ -15,67 +14,12 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./tabla.module.css";
 import { useState, useEffect } from "react";
-import { useRouter } from "next/dist/client/router";
 import ModalEditar from "../modal/modalEditar";
-//import SpinnerLoading from "../general/spinnerLoading";
-//import moment from "moment";
-//import axios from "axios";
-//import { avisoError } from "../../funciones/avisos";
+import { avisoError } from "../../../funciones/avisos";
+import moment from "moment";
 
 //const urlApi = process.env.API_ROOT;
-
-const dataPrueba = [
-  {
-    nombre: "Jeremy Carreras",
-    fechaActualizacion: "15-05-2022",
-    usuario: "jeremy",
-    tipo: "Trabajador",
-    password: "password",
-    direccion: "Calle No. 1234",
-    tipoUsuario: "Admin",
-    telefono: "12345678",
-  },
-  {
-    nombre: "Marco Romero",
-    fechaActualizacion: "15-05-2022",
-    usuario: "marco",
-    tipo: "Trabajador",
-    password: "password",
-    direccion: "Calle No. 1234",
-    tipoUsuario: "Admin",
-    telefono: "12345678",
-  },
-  {
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaActualizacion: "15-05-2022",
-    usuario: "user",
-    tipo: "Trabajador",
-    password: "password",
-    direccion: "Calle No. 1234",
-    tipoUsuario: "Admin",
-    telefono: "12345678",
-  },
-  {
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaActualizacion: "15-05-2022",
-    usuario: "user",
-    tipo: "Trabajador",
-    password: "password",
-    direccion: "Calle No. 1234",
-    tipoUsuario: "Admin",
-    telefono: "12345678",
-  },
-  {
-    nombre: "Nombre Apellido1 Apellido2",
-    fechaActualizacion: "15-05-2022",
-    usuario: "user",
-    tipo: "Trabajador",
-    password: "password",
-    direccion: "Calle No. 1234",
-    tipoUsuario: "Admin",
-    telefono: "12345678",
-  },
-];
+const urlApi = "http://localhost:3000";
 
 const Tabla = () => {
   const [dataCompleta, setDataCompleta] = useState([]);
@@ -87,47 +31,23 @@ const Tabla = () => {
   const [showModalEditar, setShowModalEditar] = useState(false);
   const [dataEditar, setDataEditar] = useState({});
 
-  const router = useRouter();
-
-  const handleNextPage = (producto) => {
-    router.push({
-      pathname: "/trabajadorUnico",
-      query: {
-        idTrabajador: 1,
-      },
-    });
-  };
-
   const handleCloseModalEditar = () => {
     setShowModalEditar(!showModalEditar);
   };
 
-  useEffect(() => {
-    async function fetchData() {
-      setDataCompleta(dataPrueba);
-      setData(dataPrueba);
-      /*try {
-        const response = await axios.get(`${urlApi}/adscripciones/pedidos`, {
-          params: {
-            idAdscripcion: localStorage.getItem("id_adscripcion"),
-          },
-        });
-        setLoading(false);
-        setReverse(true);
-        ordenar(response.data, "fecha_evento");
-        for (let index in response.data) {
-          response.data[index].pCola = index;
-        }
-        setReverse(false);
-        setDataCompleta(response.data);
-        setData(response.data);
-      } catch (error) {
-        setLoading(false);
-        avisoError("No fue posible cargar los pedidos");
-        console.log(error);
-      }*/
+  async function getData() {
+    try {
+      const response = await axios.get(`${urlApi}/Trabajador/trabajadores`);
+      setDataCompleta(response.data);
+      setData(response.data);
+    } catch (error) {
+      avisoError("No fue posible cargar los pedidos");
+      console.log(error);
     }
-    fetchData();
+  }
+
+  useEffect(() => {
+    getData();
   }, []);
 
   function predicateBy(array) {
@@ -151,8 +71,8 @@ const Tabla = () => {
 
   const campos = [
     { id: 1, nombre: "Nombre", nombreVar: "nombre" },
-    { id: 2, nombre: "Fecha actualización", nombreVar: "fechaActualizacion" },
-    { id: 3, nombre: "Usuario", nombreVar: "usuario" },
+    { id: 2, nombre: "Usuario", nombreVar: "usuario" },
+    { id: 3, nombre: "Fecha actualización", nombreVar: "fechaActualizacion" },
   ];
 
   const filtrarElementos = (terminoBusqueda) => {
@@ -181,13 +101,13 @@ const Tabla = () => {
       className={`${styles.container} ${styles.shadow} rounded my-5`}
     >
       {loading ? (
-        <div style={{ textAlign: "center", marginTop: "200px" }}>
+        <div style={{ textAlign: "center", marginTop: "100px" }}>
           {/*<SpinnerLoading width={"3rem"} height={"3rem"} fontSize={"1.7rem"} />*/}
         </div>
       ) : (
         <div>
           {dataCompleta.length === 0 ? (
-            <Row style={{ textAlign: "center", margin: "200px 0 200px 0" }}>
+            <Row style={{ textAlign: "center", padding: "200px 0 200px 0" }}>
               <p className="h2">No hay registros</p>
             </Row>
           ) : (
@@ -258,10 +178,13 @@ const Tabla = () => {
                             <p className="m-2"></p> {cliente.nombre}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.fechaActualizacion}
+                            <p className="m-2"></p> {cliente.usuario}
                           </td>
                           <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.usuario}
+                            <p className="m-2"></p>{" "}
+                            {moment(cliente.fechaUltimaActualizacion).format(
+                              "YYYY-MM-DD"
+                            )}
                           </td>
                         </tr>
                       ))}
@@ -278,6 +201,7 @@ const Tabla = () => {
         handleClose={handleCloseModalEditar}
         dataTrabajador={dataEditar}
         setDataTrabajador={setDataEditar}
+        renderData={getData}
       ></ModalEditar>
     </Container>
   );

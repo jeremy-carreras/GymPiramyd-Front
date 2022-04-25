@@ -7,11 +7,17 @@ import {
   faEyeSlash,
   faPenToSquare,
 } from "@fortawesome/free-solid-svg-icons";
-//import axios from "axios";
-//import { avisoExito } from "../../funciones/avisos";
-//import Swal from "sweetalert2";
+import moment from "moment";
+import {
+  avisoError,
+  avisoExito,
+  avisoLoading,
+  cerrarLoading,
+} from "../../../funciones/avisos";
+import axios from "axios";
 
-const urlApi = process.env.API_ROOT;
+//const urlApi = process.env.API_ROOT;
+const urlApi = "http://localhost:3000";
 
 const ModalEditar = (props) => {
   const [visible, setVisible] = useState(false);
@@ -55,8 +61,21 @@ const ModalEditar = (props) => {
     });
   };
 
-  const handleSubmit = () => {
+  const handleSubmit = async () => {
     console.log(props.dataTrabajador);
+    avisoLoading();
+    try {
+      const response = await axios.put(
+        `${urlApi}/Trabajador/update`,
+        props.dataTrabajador
+      );
+      await avisoExito();
+      props.renderData();
+    } catch (error) {
+      console.log(error);
+      await avisoError("No fue posible dar de alta el usuario");
+    }
+    cerrarLoading();
   };
 
   const changePass = (index) => {
@@ -83,14 +102,6 @@ const ModalEditar = (props) => {
                   onChange={handleInputsChange}
                   placeholder="Nombre"
                   defaultValue={props.dataTrabajador.nombre}
-                />
-              </FloatingLabel>
-              <FloatingLabel label="Dirección" className="mb-3">
-                <Form.Control
-                  name="direccion"
-                  onChange={handleInputsChange}
-                  placeholder="Dirección"
-                  defaultValue={props.dataTrabajador.direccion}
                 />
               </FloatingLabel>
               <FloatingLabel label="Teléfono" className="mb-3">
@@ -149,17 +160,9 @@ const ModalEditar = (props) => {
                 </Col>
                 <Col className="col-12 col-sm-8">
                   <h5 style={{ fontWeight: "300" }}>
-                    {props.dataTrabajador.fechaActualizacion}
-                  </h5>
-                </Col>
-              </Row>
-              <Row className="px-4 pb-3">
-                <Col className="col-12 col-sm-4">
-                  <h5>Dirección:</h5>
-                </Col>
-                <Col className="col-12 col-sm-8">
-                  <h5 style={{ fontWeight: "300" }}>
-                    {props.dataTrabajador.direccion}
+                    {moment(
+                      props.dataTrabajador.fechaUltimaActualizacion
+                    ).format("YYYY-MM-DD")}
                   </h5>
                 </Col>
               </Row>
@@ -179,7 +182,16 @@ const ModalEditar = (props) => {
                 </Col>
                 <Col className="col-12 col-sm-8">
                   <h5 style={{ fontWeight: "300" }}>
-                    {props.dataTrabajador.tipoUsuario}
+                    {props.dataTrabajador.idTipoUsuario === 1 ? (
+                      <p>Administrador</p>
+                    ) : (
+                      <></>
+                    )}
+                    {props.dataTrabajador.idTipoUsuario === 2 ? (
+                      <p>Trabajador</p>
+                    ) : (
+                      <></>
+                    )}
                   </h5>
                 </Col>
               </Row>

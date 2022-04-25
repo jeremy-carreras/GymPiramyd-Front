@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import axios from "axios";
 
 //const urlApi = process.env.API_ROOT;
-const urlApi = "http://localhost:8081";
+const urlApi = "http://localhost:3000";
 
 const Index = () => {
   const [dataCliente, setDataCliente] = useState([]);

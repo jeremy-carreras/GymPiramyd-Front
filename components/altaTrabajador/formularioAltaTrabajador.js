@@ -8,20 +8,31 @@ import {
 } from "react-bootstrap";
 import styles from "./formularioAltaTrabajador.module.css";
 import { useState } from "react";
+import {
+  avisoError,
+  avisoExito,
+  avisoFalta,
+  avisoLoading,
+  cerrarLoading,
+} from "../../funciones/avisos";
+import axios from "axios";
+import { useRouter } from "next/router";
+
+const urlApi = "http://localhost:3000";
 
 const FormularioAltaTrabajador = () => {
-  const [selectedTipoUsuario, setSelectedTipoUsuario] = useState(
+  const [selectedidTipoUsuario, setSelectedidTipoUsuario] = useState(
     "Seleccione el tipo de usuario"
   );
-  const [tipoUsuario, setTipoUsuario] = useState(null);
   const [dataAlta, setDataAlta] = useState({
-    nombreCliente: "",
-    telefono: "",
-    direccion: "",
-    tipoUsuario: "",
-    usuario: "",
-    password: "",
+    nombre: null,
+    telefono: null,
+    idTipoUsuario: null,
+    usuario: null,
+    password: null,
+    idAdmin: 1,
   });
+  const router = useRouter();
 
   const handleInputChange = (event) => {
     setDataAlta({
@@ -30,8 +41,28 @@ const FormularioAltaTrabajador = () => {
     });
   };
 
-  const inscribir = () => {
+  const agregarTrabajdor = async () => {
     console.log(dataAlta);
+    if (
+      !dataAlta.nombre ||
+      !dataAlta.telefono ||
+      !dataAlta.idTipoUsuario ||
+      !dataAlta.usuario ||
+      !dataAlta.password
+    ) {
+      avisoFalta("Algún campo está vacío");
+      return;
+    }
+    avisoLoading();
+    try {
+      const response = await axios.post(`${urlApi}/Trabajador/nuevo`, dataAlta);
+      await avisoExito();
+      router.push("/matriculaTrabajadores");
+    } catch (error) {
+      console.log(error);
+      await avisoError("No fue posible dar de alta el usuario");
+    }
+    cerrarLoading();
   };
 
   return (
@@ -45,19 +76,13 @@ const FormularioAltaTrabajador = () => {
           <h5>Nombre:</h5>
         </Col>
         <Col className="col-12 mb-3">
-          <FormControl name="nombreCliente" onChange={handleInputChange} />
+          <FormControl name="nombre" onChange={handleInputChange} />
         </Col>
         <Col className="col-12">
           <h5>Teléfono:</h5>
         </Col>
         <Col className="col-12 mb-3">
           <FormControl name="telefono" onChange={handleInputChange} />
-        </Col>
-        <Col className="col-12">
-          <h5>Dirección:</h5>
-        </Col>
-        <Col className="col-12 mb-3">
-          <FormControl name="direccion" onChange={handleInputChange} />
         </Col>
         <Col className="col-12">
           <h5>Tipo de trabajador:</h5>
@@ -69,30 +94,26 @@ const FormularioAltaTrabajador = () => {
               id={1}
               variant="outline-secondary"
             >
-              {selectedTipoUsuario}
+              {selectedidTipoUsuario}
             </Dropdown.Toggle>
             <Dropdown.Menu
               style={{ width: "100%" }}
               onClick={(event) => {
                 setDataAlta({
                   ...dataAlta,
-                  tipoUsuario: event.target.id,
+                  idTipoUsuario: parseInt(event.target.id),
                 });
-                //setTipoUsuario(parseInt(event.target.id));
+                //setidTipoUsuario(parseInt(event.target.id));
                 if (parseInt(event.target.id) === 1) {
-                  setSelectedTipoUsuario("Administrador");
+                  setSelectedidTipoUsuario("Administrador");
                 }
                 if (parseInt(event.target.id) === 2) {
-                  setSelectedTipoUsuario("Trabajador");
+                  setSelectedidTipoUsuario("Trabajador");
                 }
               }}
             >
-              <Dropdown.Item id={1}>
-                Administrador
-              </Dropdown.Item>
-              <Dropdown.Item id={2}>
-                Trabajador
-              </Dropdown.Item>
+              <Dropdown.Item id={1}>Administrador</Dropdown.Item>
+              <Dropdown.Item id={2}>Trabajador</Dropdown.Item>
             </Dropdown.Menu>
           </Dropdown>
         </Col>
@@ -111,7 +132,7 @@ const FormularioAltaTrabajador = () => {
       </Row>
       <Row className="pb-4 text-center">
         <Col>
-          <Button onClick={inscribir}>Aceptar</Button>
+          <Button onClick={agregarTrabajdor}>Aceptar</Button>
         </Col>
       </Row>
     </Container>

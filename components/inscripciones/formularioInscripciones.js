@@ -2,18 +2,28 @@ import { Container, Row, Col, Button, FormControl } from "react-bootstrap";
 import styles from "./formularioInscripciones.module.css";
 import { useState } from "react";
 import axios from "axios";
+import {
+  avisoError,
+  avisoExito,
+  avisoFalta,
+  avisoLoading,
+  cerrarLoading,
+} from "../../funciones/avisos";
+import { validarVar } from "../../funciones/validaciones";
+import { useRouter } from "next/router";
 
-const urlApi = "http://localhost:8081";
+const urlApi = "http://localhost:3000";
 
 const FormularioInscripciones = () => {
   const [dataInscripcion, setDataInscripcion] = useState({
-    nombre: "",
-    fechaNacimiento: "",
-    telefono: "",
-    telefonoEmergencia: "",
-    correo: "",
-    tipoSangre: "",
+    nombre: null,
+    fechaNacimiento: null,
+    telefono: null,
+    telefonoEmergencia: null,
+    correo: null,
+    tipoSangre: null,
   });
+  const router = useRouter();
 
   const handleInputChange = (event) => {
     setDataInscripcion({
@@ -23,12 +33,36 @@ const FormularioInscripciones = () => {
   };
 
   const inscribir = async () => {
-    console.log(dataInscripcion);
+    //console.log(dataInscripcion);
+    if (
+      !dataInscripcion.nombre ||
+      !dataInscripcion.fechaNacimiento ||
+      !dataInscripcion.telefono ||
+      !dataInscripcion.telefonoEmergencia ||
+      !dataInscripcion.correo ||
+      !dataInscripcion.tipoSangre
+    ) {
+      avisoFalta("Algún campo está vacío");
+      return;
+    }
+    avisoLoading();
     try {
-      await axios.post(`${urlApi}/cliente/nuevo`, dataInscripcion);
+      const response = await axios.post(
+        `${urlApi}/cliente/nuevo`,
+        dataInscripcion
+      );
+      await avisoExito("El nuevo ID del cliente es " + response.data.data.idCliente);
+      router.push({
+        pathname: "/pagos",
+        query: {
+          idCliente: response.data.data.idCliente,
+        },
+      });
     } catch (error) {
       console.log(error);
+      await avisoError("No fue posible dar de alta el usuario");
     }
+    cerrarLoading();
   };
 
   return (
@@ -70,7 +104,11 @@ const FormularioInscripciones = () => {
           <h5>Correo:</h5>
         </Col>
         <Col className="col-12 mb-3">
-          <FormControl name="correo" onChange={handleInputChange} />
+          <FormControl
+            type="email"
+            name="correo"
+            onChange={handleInputChange}
+          />
         </Col>
         <Col className="col-12">
           <h5>Tipo de sangre:</h5>

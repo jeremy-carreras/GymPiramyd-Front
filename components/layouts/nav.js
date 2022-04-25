@@ -1,22 +1,23 @@
 import Link from "next/link";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { faBars } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Offcanvas } from "react-bootstrap";
 import styles from "../../styles/nav.module.css";
 
 const Nav = (props) => {
-  const [tipoUsuario, setTipoUsusario] = useState(props.tipoUsuario);
+  const [tipoUsuario, setTipoUsusario] = useState(null);
   const [show, setShow] = useState(false);
 
   const handleClose = () => setShow(false);
   const handleShow = () => setShow(true);
 
-  // 1- adscripcion
-  // 2- trabajador
-  // 3- admin
-  // 4- comunicación social
-  // 4- reproducciones gráficas
+  useEffect(() => {
+    function fetchData() {
+      setTipoUsusario(parseInt(localStorage.getItem("idTipoUsuario")));
+    }
+    fetchData();
+  });
 
   return (
     <div className={`${styles.nav}`}>

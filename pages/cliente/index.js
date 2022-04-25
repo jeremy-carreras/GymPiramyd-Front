@@ -3,8 +3,14 @@ import Layout from "/components/layouts/layout";
 import InfoCard from "../../components/cliente/infoCard";
 import { useState, useEffect } from "react";
 import axios from "axios";
+import {
+  avisoError,
+  avisoExito,
+  avisoLoading,
+  cerrarLoading,
+} from "../../funciones/avisos";
 
-const urlApi = "http://localhost:8081";
+const urlApi = "http://localhost:3000";
 
 const Index = () => {
   const [dataCliente, setDataCliente] = useState({});
@@ -12,13 +18,11 @@ const Index = () => {
   async function getData() {
     const params = new URLSearchParams(window.location.search);
     const idCliente = params.get("idCliente");
-    //console.log(idProducto);
     try {
       const response = await axios.get(
         `${urlApi}/cliente/cliente?idCliente=${idCliente}`
       );
       setDataCliente(response.data);
-      console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -41,11 +45,15 @@ const Index = () => {
 
   const modificarCliente = async () => {
     //console.log(dataInscripcion);
+    avisoLoading();
     try {
       await axios.put(`${urlApi}/cliente/cliente`, dataCliente);
+      await avisoExito();
     } catch (error) {
       console.log(error);
+      await avisoError("Error al modificar el cliente");
     }
+    cerrarLoading();
   };
 
   return (
