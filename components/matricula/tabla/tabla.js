@@ -94,8 +94,8 @@ const Tabla = (props) => {
   const campos = [
     { id: 1, nombre: "Clave", nombreVar: "idCliente" },
     { id: 2, nombre: "Nombre", nombreVar: "nombre" },
-    { id: 3, nombre: "Fecha de último pago", nombreVar: "fechaUltimoPago" },
-    { id: 4, nombre: "Fecha de próximo pago", nombreVar: "fechaProximoPago" },
+    { id: 3, nombre: "Fecha del último pago", nombreVar: "fechaUltimoPago" },
+    { id: 4, nombre: "Fecha del próximo pago", nombreVar: "fechaProximoPago" },
   ];
 
   const filtrarElementos = (terminoBusqueda) => {
@@ -208,11 +208,11 @@ const Tabla = (props) => {
                           <td style={{ textAlign: "center" }}>
                             <p className="m-2"></p>
                             {cliente.fechaUltimoPago ? (
-                              <p>
+                              <>
                                 {moment(cliente.fechaUltimoPago).format(
                                   "YYYY-MM-DD"
                                 )}
-                              </p>
+                              </>
                             ) : (
                               <p>No hay registros</p>
                             )}
@@ -220,11 +220,11 @@ const Tabla = (props) => {
                           <td style={{ textAlign: "center" }}>
                             <p className="m-2"></p>
                             {cliente.fechaProximoPago ? (
-                              <p>
+                              <>
                                 {moment(cliente.fechaProximoPago).format(
                                   "YYYY-MM-DD"
                                 )}
-                              </p>
+                              </>
                             ) : (
                               <p>No hay registros</p>
                             )}

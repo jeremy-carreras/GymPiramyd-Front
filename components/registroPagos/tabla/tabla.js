@@ -87,9 +87,9 @@ const Tabla = () => {
   const campos = [
     { id: 1, nombre: "Folio", nombreVar: "folio" },
     { id: 2, nombre: "Fecha de pago", nombreVar: "fechaPago" },
-    { id: 3, nombre: "Clave del cliente", nombreVar: "nombreCliente" },
-    { id: 4, nombre: "Clave del trabajdor", nombreVar: "nombreTrabajador" },
-    { id: 5, nombre: "Plazo", nombreVar: "nombrePlan" },
+    { id: 3, nombre: "Clave del cliente", nombreVar: "idCliente" },
+    { id: 4, nombre: "Nombre del trabajdor", nombreVar: "Trabajador.nombre" },
+    { id: 5, nombre: "Plazo", nombreVar: "Plan.nombre" },
     { id: 6, nombre: "Cantidad", nombreVar: "cantidad" },
     { id: 7, nombre: "Monto", nombreVar: "monto" },
   ];
@@ -99,13 +99,13 @@ const Tabla = () => {
       if (
         item.folio.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
         item.fechaPago.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        String(item.nombreCliente)
+        String(item.idCliente)
           .toLowerCase()
           .includes(terminoBusqueda.toLowerCase()) ||
-        String(item.nombreTrabajador)
+        String(item.Trabajador.nombre)
           .toLowerCase()
           .includes(terminoBusqueda.toLowerCase()) ||
-        String(item.nombrePlan)
+        String(item.Plan.nombre)
           .toLowerCase()
           .includes(terminoBusqueda.toLowerCase()) ||
         String(item.monto).toLowerCase().includes(terminoBusqueda.toLowerCase())
@@ -129,110 +129,101 @@ const Tabla = () => {
       style={{ backgroundColor: "#fff" }}
       className={`${styles.container} ${styles.shadow} rounded my-5`}
     >
-      {loading ? (
-        <div style={{ textAlign: "center", marginTop: "200px" }}>
-          {/*<SpinnerLoading width={"3rem"} height={"3rem"} fontSize={"1.7rem"} />*/}
-        </div>
-      ) : (
-        <div>
-          {dataCompleta.length === 0 ? (
-            <Row style={{ textAlign: "center", padding: "200px 0 200px 0" }}>
-              <p className="h2">No hay registros</p>
-            </Row>
-          ) : (
-            <div className="p-4">
-              <div style={{ textAlign: "left", width: "15rem" }}>
-                <InputGroup className="mt-2" size="sm">
-                  <FormControl
-                    placeholder="Folio, fecha, nombre, monto"
-                    value={busqueda}
-                    onChange={(value) => {
-                      setBusqueda(value.target.value);
-                      filtrarElementos(value.target.value);
-                    }}
-                  />
-                  <InputGroup.Text>
-                    <FontAwesomeIcon
-                      className={`btnPrimario`}
-                      icon={faSearch}
-                    />
-                  </InputGroup.Text>
-                </InputGroup>
-              </div>
-              {data.length === 0 ? (
-                <Row style={{ textAlign: "center", margin: "100px 0 200px 0" }}>
-                  <p className="h2">No hay coincidencias</p>
-                </Row>
-              ) : (
-                <div
-                  style={{
-                    marginTop: "30px",
-                    overflow: "scroll",
-                    maxHeight: "25rem",
-                    minHeight: "12rem",
+      <div>
+        {dataCompleta.length === 0 ? (
+          <Row style={{ textAlign: "center", padding: "200px 0 200px 0" }}>
+            <p className="h2">No hay registros</p>
+          </Row>
+        ) : (
+          <div className="p-4">
+            <div style={{ textAlign: "left", width: "15rem" }}>
+              <InputGroup className="mt-2" size="sm">
+                <FormControl
+                  placeholder="Folio, fecha, nombre, monto"
+                  value={busqueda}
+                  onChange={(value) => {
+                    setBusqueda(value.target.value);
+                    filtrarElementos(value.target.value);
                   }}
-                >
-                  <Table hover responsive className="table table-striped">
-                    <thead>
-                      <tr>
-                        {campos.map((campo, index) => (
-                          <th style={{ textAlign: "center" }} key={campo.id}>
-                            {campo.nombre}{" "}
-                            <FontAwesomeIcon
-                              className={`mt-2 ${styles.caretDown}`}
-                              icon={caret[index]}
-                              onClick={() => {
-                                ordenar(data, campo.nombreVar);
-                                //console.log("Se ordena " + data + " por " + campo.nombreVar);
-                                setReverse(!reverse);
-                                changeCaret(index, reverse);
-                              }}
-                            />
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.map((cliente, index) => (
-                        <tr
-                          key={index}
-                          onClick={() => {
+                />
+                <InputGroup.Text>
+                  <FontAwesomeIcon className={`btnPrimario`} icon={faSearch} />
+                </InputGroup.Text>
+              </InputGroup>
+            </div>
+            {data.length === 0 ? (
+              <Row style={{ textAlign: "center", margin: "100px 0 200px 0" }}>
+                <p className="h2">No hay coincidencias</p>
+              </Row>
+            ) : (
+              <div
+                style={{
+                  marginTop: "30px",
+                  overflow: "scroll",
+                  maxHeight: "25rem",
+                  minHeight: "12rem",
+                }}
+              >
+                <Table hover responsive className="table table-striped">
+                  <thead>
+                    <tr>
+                      {campos.map((campo, index) => (
+                        <th style={{ textAlign: "center" }} key={campo.id}>
+                          {campo.nombre}{" "}
+                          <FontAwesomeIcon
+                            className={`mt-2 ${styles.caretDown}`}
+                            icon={caret[index]}
+                            onClick={() => {
+                              ordenar(data, campo.nombreVar);
+                              //console.log("Se ordena " + data + " por " + campo.nombreVar);
+                              setReverse(!reverse);
+                              changeCaret(index, reverse);
+                            }}
+                          />
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((cliente, index) => (
+                      <tr
+                        key={index}
+                        /*onClick={() => {
                             handleNextPage(cliente);
                           }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.folio}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p>{" "}
-                            {moment(cliente.fechaPago).format("YYYY-MM-DD")}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.idCliente}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.Trabajador.nombre}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.Plan.nombre}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.cantidad}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> ${cliente.monto}.00
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                </div>
-              )}
-            </div>
-          )}
-        </div>
-      )}
+                          style={{ cursor: "pointer" }}*/
+                      >
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p> {cliente.folio}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p>{" "}
+                          {moment(cliente.fechaPago).format("YYYY-MM-DD")}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p> {cliente.idCliente}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p> {cliente.Trabajador.nombre}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p> {cliente.Plan.nombre}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p> {cliente.cantidad}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p> ${cliente.monto}.00
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
     </Container>
   );
 };

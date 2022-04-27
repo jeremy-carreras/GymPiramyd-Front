@@ -1,12 +1,9 @@
 import { Modal, Button, Row, Col, FloatingLabel, Form } from "react-bootstrap";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import styles from "./modalEditar.module.css";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faEye,
-  faEyeSlash,
-  faPenToSquare,
-} from "@fortawesome/free-solid-svg-icons";
+import { faPenToSquare } from "@fortawesome/free-solid-svg-icons";
+import ModalPassword from "./modalPassword";
 import moment from "moment";
 import {
   avisoError,
@@ -20,30 +17,16 @@ import axios from "axios";
 const urlApi = "http://localhost:3000";
 
 const ModalEditar = (props) => {
-  const [visible, setVisible] = useState(false);
-  const [password, setPassword] = useState("");
   const [showEdit, setShowEdit] = useState(false);
-  const [indPass, setIndPass] = useState(false);
-  const [showPass, setShowPass] = useState("password");
-
-  useEffect(() => {
-    const first = () => {
-      let aux = "";
-      /*for (let i = 0; i < hidden.length; i++) {
-        aux = aux.concat("*");
-      }*/
-      setPassword(aux);
-    };
-    first();
-  }, []);
+  const [showModalPassword, setShowModalPassword] = useState(false);
 
   const handleClose = () => {
     props.handleClose();
     setShowEdit(false);
   };
 
-  const handleShow = () => {
-    setVisible(!visible);
+  const handleCloseModalPassword = () => {
+    setShowModalPassword(!showModalPassword);
   };
 
   const handelEdit = () => {
@@ -51,10 +34,6 @@ const ModalEditar = (props) => {
   };
 
   const handleInputsChange = (event) => {
-    /*setDataEditar({
-      ...dataEditar,
-      [event.target.name]: event.target.value,
-    });*/
     props.setDataTrabajador({
       ...props.dataTrabajador,
       [event.target.name]: event.target.value,
@@ -62,26 +41,16 @@ const ModalEditar = (props) => {
   };
 
   const handleSubmit = async () => {
-    console.log(props.dataTrabajador);
     avisoLoading();
     try {
-      const response = await axios.put(
-        `${urlApi}/Trabajador/update`,
-        props.dataTrabajador
-      );
+      await axios.put(`${urlApi}/Trabajador/update`, props.dataTrabajador);
       await avisoExito();
-      props.renderData();
+      window.location.reload(true);
     } catch (error) {
       console.log(error);
       await avisoError("No fue posible dar de alta el usuario");
     }
     cerrarLoading();
-  };
-
-  const changePass = (index) => {
-    setIndPass(!indPass);
-    if (index) return setShowPass("password");
-    else return setShowPass("text");
   };
 
   return (
@@ -120,15 +89,6 @@ const ModalEditar = (props) => {
                   onChange={handleInputsChange}
                   placeholder="Usuario"
                   defaultValue={props.dataTrabajador.usuario}
-                />
-              </FloatingLabel>
-              <FloatingLabel label="Contraseña" className="mb-3">
-                <Form.Control
-                  type={showPass}
-                  name="password"
-                  onChange={handleInputsChange}
-                  placeholder="Contraseña"
-                  defaultValue={props.dataTrabajador.password}
                 />
               </FloatingLabel>
             </div>
@@ -176,7 +136,7 @@ const ModalEditar = (props) => {
                   </h5>
                 </Col>
               </Row>
-              <Row className="px-4 pb-3">
+              <Row className="px-4 pb-2">
                 <Col className="col-12 col-sm-4">
                   <h5>Tipo de usuario:</h5>
                 </Col>
@@ -205,57 +165,21 @@ const ModalEditar = (props) => {
                   </h5>
                 </Col>
               </Row>
-              <Row className="px-4 pb-3">
-                <Col className="col-12 col-sm-4">
-                  <h5>Contraseña:</h5>
-                </Col>
-                {visible ? (
-                  <Col className="col-12 col-sm-8 py-1">
-                    <h5 style={{ fontWeight: "300" }}>
-                      <FontAwesomeIcon
-                        style={{ cursor: "pointer" }}
-                        icon={faEyeSlash}
-                        className={`${styles.hover} py-1 px-1 fa-sm`}
-                        onClick={() => {
-                          handleShow();
-                        }}
-                      />
-                      {props.dataTrabajador.password}
-                    </h5>
-                  </Col>
-                ) : (
-                  <Col className="col-12 col-sm-8">
-                    <h5 style={{ fontWeight: "300" }}>
-                      <FontAwesomeIcon
-                        style={{ cursor: "pointer" }}
-                        icon={faEye}
-                        className={`${styles.hover} py-2 px-1 fa-sm`}
-                        onClick={() => {
-                          handleShow();
-                        }}
-                      />
-                      {password}
-                    </h5>
-                  </Col>
-                )}
-              </Row>
             </div>
           )}
           {showEdit ? (
             <Row style={{ textAlign: "space-between" }}>
-              <Col>
-                <Form.Check
-                  className="mx-2 mt-0"
-                  id={1}
-                  key={1}
-                  label="Mostrar contraseña"
-                  type="checkbox"
-                  onChange={() => {
-                    changePass(indPass);
-                  }}
-                />
-              </Col>
               <Col style={{ textAlign: "right" }}>
+                <Button
+                  onClick={() => {
+                    setShowModalPassword(!showModalPassword);
+                    handleClose();
+                  }}
+                  className="mx-2"
+                  variant="secondary"
+                >
+                  Actualizar contraseña
+                </Button>
                 <Button onClick={handelEdit} className="mx-2" variant="danger">
                   Cancelar
                 </Button>
@@ -278,6 +202,12 @@ const ModalEditar = (props) => {
           </Button>
         </Modal.Footer>
       </Modal>
+      <ModalPassword
+        handleClose={handleCloseModalPassword}
+        dataTrabajador={props.dataTrabajador}
+        show={showModalPassword}
+        renderData={props.renderData}
+      ></ModalPassword>
     </>
   );
 };

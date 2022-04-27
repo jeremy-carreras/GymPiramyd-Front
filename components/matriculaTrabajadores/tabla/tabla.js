@@ -15,6 +15,7 @@ import {
 import styles from "./tabla.module.css";
 import { useState, useEffect } from "react";
 import ModalEditar from "../modal/modalEditar";
+import ModalPassword from "../modal/modalPassword";
 import { avisoError } from "../../../funciones/avisos";
 import moment from "moment";
 
@@ -27,7 +28,6 @@ const Tabla = () => {
   const [busqueda, setBusqueda] = useState("");
   const [reverse, setReverse] = useState(false);
   const [caret] = useState([faCaretDown, faCaretDown, faCaretDown]);
-  const [loading, setLoading] = useState(false);
   const [showModalEditar, setShowModalEditar] = useState(false);
   const [dataEditar, setDataEditar] = useState({});
 
@@ -41,7 +41,7 @@ const Tabla = () => {
       setDataCompleta(response.data);
       setData(response.data);
     } catch (error) {
-      avisoError("No fue posible cargar los pedidos");
+      avisoError("No fue posible cargar los trabajadores");
       console.log(error);
     }
   }
@@ -72,10 +72,11 @@ const Tabla = () => {
   const campos = [
     { id: 1, nombre: "Nombre", nombreVar: "nombre" },
     { id: 2, nombre: "Usuario", nombreVar: "usuario" },
-    { id: 3, nombre: "Fecha actualización", nombreVar: "fechaActualizacion" },
+    { id: 3, nombre: "Fecha actualización", nombreVar: "fechaUltimaActualizacion" },
   ];
 
   const filtrarElementos = (terminoBusqueda) => {
+    console.log("lwjhrbvwikne");
     let search = dataCompleta.filter((item) => {
       if (
         item.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
@@ -100,102 +101,93 @@ const Tabla = () => {
       style={{ backgroundColor: "#fff" }}
       className={`${styles.container} ${styles.shadow} rounded my-5`}
     >
-      {loading ? (
-        <div style={{ textAlign: "center", marginTop: "100px" }}>
-          {/*<SpinnerLoading width={"3rem"} height={"3rem"} fontSize={"1.7rem"} />*/}
-        </div>
-      ) : (
-        <div>
-          {dataCompleta.length === 0 ? (
-            <Row style={{ textAlign: "center", padding: "200px 0 200px 0" }}>
-              <p className="h2">No hay registros</p>
-            </Row>
-          ) : (
-            <div className="p-4">
-              <div style={{ textAlign: "left", width: "15rem" }}>
-                <InputGroup className="mt-2" size="sm">
-                  <FormControl
-                    placeholder="Nombre, usuario"
-                    value={busqueda}
-                    onChange={(value) => {
-                      setBusqueda(value.target.value);
-                      filtrarElementos(value.target.value);
-                    }}
-                  />
-                  <InputGroup.Text>
-                    <FontAwesomeIcon
-                      className={`btnPrimario`}
-                      icon={faSearch}
-                    />
-                  </InputGroup.Text>
-                </InputGroup>
-              </div>
-              {data.length === 0 ? (
-                <Row style={{ textAlign: "center", margin: "100px 0 200px 0" }}>
-                  <p className="h2">No hay coincidencias</p>
-                </Row>
-              ) : (
-                <div
-                  style={{
-                    marginTop: "30px",
-                    overflow: "scroll",
-                    maxHeight: "25rem",
-                    minHeight: "12rem",
+      <div>
+        {dataCompleta.length === 0 ? (
+          <Row style={{ textAlign: "center", padding: "200px 0 200px 0" }}>
+            <p className="h2">No hay registros</p>
+          </Row>
+        ) : (
+          <div className="p-4">
+            <div style={{ textAlign: "left", width: "15rem" }}>
+              <InputGroup className="mt-2" size="sm">
+                <FormControl
+                  placeholder="Nombre, usuario"
+                  value={busqueda}
+                  onChange={(value) => {
+                    setBusqueda(value.target.value);
+                    filtrarElementos(value.target.value);
                   }}
-                >
-                  <Table hover responsive className="table table-striped">
-                    <thead>
-                      <tr>
-                        {campos.map((campo, index) => (
-                          <th style={{ textAlign: "center" }} key={campo.id}>
-                            {campo.nombre}{" "}
-                            <FontAwesomeIcon
-                              className={`mt-2 ${styles.caretDown}`}
-                              icon={caret[index]}
-                              onClick={() => {
-                                ordenar(data, campo.nombreVar);
-                                //console.log("Se ordena " + data + " por " + campo.nombreVar);
-                                setReverse(!reverse);
-                                changeCaret(index, reverse);
-                              }}
-                            />
-                          </th>
-                        ))}
-                      </tr>
-                    </thead>
-                    <tbody>
-                      {data.map((cliente, index) => (
-                        <tr
-                          key={index}
-                          onClick={() => {
-                            //handleNextPage(cliente);
-                            setDataEditar(dataCompleta[index]);
-                            setShowModalEditar(!showModalEditar);
-                          }}
-                          style={{ cursor: "pointer" }}
-                        >
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.nombre}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p> {cliente.usuario}
-                          </td>
-                          <td style={{ textAlign: "center" }}>
-                            <p className="m-2"></p>{" "}
-                            {moment(cliente.fechaUltimaActualizacion).format(
-                              "YYYY-MM-DD"
-                            )}
-                          </td>
-                        </tr>
-                      ))}
-                    </tbody>
-                  </Table>
-                </div>
-              )}
+                />
+                <InputGroup.Text>
+                  <FontAwesomeIcon className={`btnPrimario`} icon={faSearch} />
+                </InputGroup.Text>
+              </InputGroup>
             </div>
-          )}
-        </div>
-      )}
+            {data.length === 0 ? (
+              <Row style={{ textAlign: "center", margin: "100px 0 200px 0" }}>
+                <p className="h2">No hay coincidencias</p>
+              </Row>
+            ) : (
+              <div
+                style={{
+                  marginTop: "30px",
+                  overflow: "scroll",
+                  maxHeight: "25rem",
+                  minHeight: "12rem",
+                }}
+              >
+                <Table hover responsive className="table table-striped">
+                  <thead>
+                    <tr>
+                      {campos.map((campo, index) => (
+                        <th style={{ textAlign: "center" }} key={campo.id}>
+                          {campo.nombre}{" "}
+                          <FontAwesomeIcon
+                            className={`mt-2 ${styles.caretDown}`}
+                            icon={caret[index]}
+                            onClick={() => {
+                              ordenar(data, campo.nombreVar);
+                              //console.log("Se ordena " + data + " por " + campo.nombreVar);
+                              setReverse(!reverse);
+                              changeCaret(index, reverse);
+                            }}
+                          />
+                        </th>
+                      ))}
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {data.map((cliente, index) => (
+                      <tr
+                        key={index}
+                        onClick={() => {
+                          //handleNextPage(cliente);
+                          setDataEditar(dataCompleta[index]);
+                          setShowModalEditar(!showModalEditar);
+                        }}
+                        style={{ cursor: "pointer" }}
+                      >
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p> {cliente.nombre}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p> {cliente.usuario}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <p className="m-2"></p>{" "}
+                          {moment(cliente.fechaUltimaActualizacion).format(
+                            "YYYY-MM-DD"
+                          )}
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </div>
+            )}
+          </div>
+        )}
+      </div>
       <ModalEditar
         show={showModalEditar}
         handleClose={handleCloseModalEditar}

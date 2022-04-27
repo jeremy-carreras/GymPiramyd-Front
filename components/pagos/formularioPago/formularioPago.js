@@ -77,6 +77,7 @@ const FormularioPago = () => {
     try {
       await axios.post(`${urlApi}/Pago/nuevo`, dataPago);
       await avisoExito();
+      window.location.reload(true);
     } catch (error) {
       console.log(error);
       await avisoError("No fue posible realizar el pago");
