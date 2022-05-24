@@ -24,6 +24,8 @@ const PRECIO_ANUAL = 1000;
 
 const urlApi = "http://localhost:3000";
 
+const url_api = process.env.API_ROOT;
+
 const FormularioPago = () => {
   const [idPlan, setIdPlan] = useState(null);
   const [cantidad, setCantidad] = useState(0);
@@ -36,8 +38,10 @@ const FormularioPago = () => {
   const [dataPlan, setDataPlan] = useState([]);
   const [idTrabajador, setIdTrabajador] = useState(null);
 
+
   useEffect(() => {
     async function getData() {
+      console.log("URL_API: " + url_api);
       try {
         const response = await axios.get(`${urlApi}/Plan/planes`);
         setDataPlan(response.data);

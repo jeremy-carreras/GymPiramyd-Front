@@ -9,11 +9,13 @@ import {
   avisoLoading,
   cerrarLoading,
 } from "../../funciones/avisos";
+import Pagos from "../../components/cliente/pagos";
 
 const urlApi = "http://localhost:3000";
 
 const Index = () => {
   const [dataCliente, setDataCliente] = useState({});
+  const [dataPagos, setDataPagos] = useState({});
 
   async function getData() {
     const params = new URLSearchParams(window.location.search);
@@ -23,6 +25,15 @@ const Index = () => {
         `${urlApi}/cliente/cliente?idCliente=${idCliente}`
       );
       setDataCliente(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+    try {
+      const response = await axios.get(
+        `${urlApi}/Pago/pagosCliente?idCliente=${idCliente}`
+      );
+      setDataPagos(response.data);
+      //console.log(response.data);
     } catch (error) {
       console.log(error);
     }
@@ -68,6 +79,7 @@ const Index = () => {
           handleInputsChange={handleInputsChange}
           modificarCliente={modificarCliente}
         ></InfoCard>
+        <Pagos></Pagos>
       </Container>
     </Layout>
   );
