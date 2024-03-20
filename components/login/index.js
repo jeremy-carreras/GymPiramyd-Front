@@ -17,8 +17,7 @@ import {
 } from "../../funciones/avisos";
 import axios from "axios";
 
-//const urlApi = process.env.API_ROOT;
-const urlApi = "http://localhost:3000";
+const urlApi = process.env.API_ROOT
 
 const Login = () => {
   const [datos, setDatos] = useState({

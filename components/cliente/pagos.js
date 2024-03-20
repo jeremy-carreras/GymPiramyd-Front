@@ -11,7 +11,7 @@ import { useState, useEffect } from "react";
 import moment from "moment";
 import axios from "axios";
 
-const urlApi = "http://localhost:3000";
+const urlApi = process.env.API_ROOT;
 
 const Pagos = (props) => {
   const [dataPagos, setDataPagos] = useState({});

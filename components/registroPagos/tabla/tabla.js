@@ -18,8 +18,7 @@ import { useRouter } from "next/dist/client/router";
 import moment from "moment";
 import axios from "axios";
 
-//const urlApi = process.env.API_ROOT;
-const urlApi = "http://localhost:3000";
+const urlApi = process.env.API_ROOT;
 
 const Tabla = () => {
   const [dataCompleta, setDataCompleta] = useState([]);

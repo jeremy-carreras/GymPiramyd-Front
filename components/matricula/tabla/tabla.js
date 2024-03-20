@@ -2,35 +2,37 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   Container,
   Table,
-  Button,
   InputGroup,
   FormControl,
   Row,
 } from "react-bootstrap";
-import Swal from "sweetalert2";
 import {
   faCaretDown,
   faSearch,
   faCaretUp,
+  faCircleCheck,
+  faCircleXmark,
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./tabla.module.css";
 import { useState, useEffect } from "react";
 import { useRouter } from "next/dist/client/router";
 import axios from "axios";
-//import SpinnerLoading from "../general/spinnerLoading";
 import moment from "moment";
-//import axios from "axios";
-//import { avisoError } from "../../funciones/avisos";
+import {
+  avisoError,
+  avisoLoading,
+  cerrarLoading,
+} from "../../../funciones/avisos";
 
-//const urlApi = process.env.API_ROOT;
-const urlApi = "http://localhost:3000";
+const urlApi = process.env.API_ROOT;
 
-const Tabla = (props) => {
-  const [dataCompleta, setDataCompleta] = useState(props.dataCliente);
-  const [data, setData] = useState(props.dataCliente);
+const Tabla = () => {
+  const [dataCompleta, setDataCompleta] = useState([]);
+  const [data, setData] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [reverse, setReverse] = useState(false);
   const [caret] = useState([
+    faCaretDown,
     faCaretDown,
     faCaretDown,
     faCaretDown,
@@ -49,24 +51,18 @@ const Tabla = (props) => {
     });
   };
 
-  /*useEffect(() => {
-    async function fetchData() {
-      setDataCompleta(props.dataCliente);
-      setData(props.dataCliente);
-      console.log(props.dataCliente);
-    }
-    fetchData();
-  }, []);*/
-
   useEffect(() => {
     async function fetchData() {
       try {
+        avisoLoading();
         const response = await axios.get(`${urlApi}/cliente/clientes`);
         setDataCompleta(response.data);
         setData(response.data);
-        //console.log(response.data);
+        cerrarLoading();
       } catch (error) {
         console.log(error);
+        avisoError("No fue podible obtener los clientes");
+        cerrarLoading();
       }
     }
     fetchData();
@@ -96,6 +92,7 @@ const Tabla = (props) => {
     { id: 2, nombre: "Nombre", nombreVar: "nombre" },
     { id: 3, nombre: "Fecha del último pago", nombreVar: "fechaUltimoPago" },
     { id: 4, nombre: "Fecha del próximo pago", nombreVar: "fechaProximoPago" },
+    { id: 5, nombre: "Status", nombreVar: "status" },
   ];
 
   const filtrarElementos = (terminoBusqueda) => {
@@ -109,7 +106,7 @@ const Tabla = (props) => {
         return item;
       }
     });
-    setData(search);
+    setData([...search]);
   };
 
   const changeCaret = (index, reverse) => {
@@ -227,6 +224,23 @@ const Tabla = (props) => {
                               </>
                             ) : (
                               <p>No hay registros</p>
+                            )}
+                          </td>
+                          <td style={{ textAlign: "center" }}>
+                            <p className="m-2"></p>
+                            {moment(cliente.fechaProximoPago) >= moment() &&
+                            cliente.fechaProximoPago ? (
+                              <FontAwesomeIcon
+                                style={{ color: "green" }}
+                                className={`fa-2x`}
+                                icon={faCircleCheck}
+                              />
+                            ) : (
+                              <FontAwesomeIcon
+                                style={{ color: "#dc3545" }}
+                                className={`fa-2x`}
+                                icon={faCircleXmark}
+                              />
                             )}
                           </td>
                         </tr>

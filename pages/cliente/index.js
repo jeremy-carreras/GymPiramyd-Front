@@ -11,7 +11,7 @@ import {
 } from "../../funciones/avisos";
 import Pagos from "../../components/cliente/pagos";
 
-const urlApi = "http://localhost:3000";
+const urlApi = process.env.API_ROOT;
 
 const Index = () => {
   const [dataCliente, setDataCliente] = useState({});

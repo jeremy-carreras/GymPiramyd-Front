@@ -18,7 +18,7 @@ import {
 import axios from "axios";
 import { useRouter } from "next/router";
 
-const urlApi = "http://localhost:3000";
+const urlApi = process.env.API_ROOT;
 
 const FormularioAltaTrabajador = () => {
   const [selectedidTipoUsuario, setSelectedidTipoUsuario] = useState(

@@ -22,9 +22,7 @@ const PRECIO_SEMANA = 100;
 const PRECIO_MES = 250;
 const PRECIO_ANUAL = 1000;
 
-const urlApi = "http://localhost:3000";
-
-const url_api = process.env.API_ROOT;
+const urlApi = process.env.API_ROOT;
 
 const FormularioPago = () => {
   const [idPlan, setIdPlan] = useState(null);
@@ -41,7 +39,7 @@ const FormularioPago = () => {
 
   useEffect(() => {
     async function getData() {
-      console.log("URL_API: " + url_api);
+      console.log("urlApi: " + urlApi);
       try {
         const response = await axios.get(`${urlApi}/Plan/planes`);
         setDataPlan(response.data);

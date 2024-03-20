@@ -19,8 +19,7 @@ import ModalPassword from "../modal/modalPassword";
 import { avisoError } from "../../../funciones/avisos";
 import moment from "moment";
 
-//const urlApi = process.env.API_ROOT;
-const urlApi = "http://localhost:3000";
+const urlApi = process.env.API_ROOT;
 
 const Tabla = () => {
   const [dataCompleta, setDataCompleta] = useState([]);
