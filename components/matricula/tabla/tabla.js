@@ -207,7 +207,7 @@ const Tabla = () => {
                             {cliente.fechaUltimoPago ? (
                               <>
                                 {moment(cliente.fechaUltimoPago).format(
-                                  "YYYY-MM-DD"
+                                  "DD-MM-YYYY"
                                 )}
                               </>
                             ) : (
@@ -219,7 +219,7 @@ const Tabla = () => {
                             {cliente.fechaProximoPago ? (
                               <>
                                 {moment(cliente.fechaProximoPago).format(
-                                  "YYYY-MM-DD"
+                                  "DD-MM-YYYY"
                                 )}
                               </>
                             ) : (

@@ -12,7 +12,7 @@ import {
 import { validarVar } from "../../funciones/validaciones";
 import { useRouter } from "next/router";
 
-const urlApi = process.env.API_ROOT;
+const urlApi = "http://localhost:3000";
 
 const FormularioInscripciones = () => {
   const [dataInscripcion, setDataInscripcion] = useState({

@@ -17,7 +17,6 @@ import {
 } from "../../../funciones/avisos";
 import axios from "axios";
 
-//const PRECIO_SEMANA = process.env.PRECIO_SEMANA;
 const PRECIO_SEMANA = 100;
 const PRECIO_MES = 250;
 const PRECIO_ANUAL = 1000;
@@ -36,16 +35,18 @@ const FormularioPago = () => {
   const [dataPlan, setDataPlan] = useState([]);
   const [idTrabajador, setIdTrabajador] = useState(null);
 
-
   useEffect(() => {
     async function getData() {
-      console.log("urlApi: " + urlApi);
+      avisoLoading("Obteniendo datos de pago")
       try {
         const response = await axios.get(`${urlApi}/Plan/planes`);
+        console.log(response.data);
         setDataPlan(response.data);
+        cerrarLoading()
       } catch (error) {
         avisoError("No fue posible cargar los datos de los planes");
         console.log(error);
+        cerrarLoading()
       }
       const params = new URLSearchParams(window.location.search);
       const idURL = params.get("idCliente") || "";
@@ -132,20 +133,9 @@ const FormularioPago = () => {
             min={1}
             onChange={(value) => {
               setCantidad(value.target.value);
-              if (idPlan === 1) {
-                setMonto(
-                  parseInt(PRECIO_SEMANA) * parseInt(value.target.value)
-                );
-              }
-              if (idPlan === 2) {
-                setMonto(parseInt(PRECIO_MES) * parseInt(value.target.value));
-              }
-              if (idPlan === 3) {
-                setMonto(parseInt(PRECIO_ANUAL) * parseInt(value.target.value));
-              }
-              if (value.target.value === "") {
-                setMonto(0);
-              }
+              setMonto(
+                parseInt(dataPlan[idPlan].precio) * parseInt(value.target.value)
+              );
             }}
           />
         </Col>

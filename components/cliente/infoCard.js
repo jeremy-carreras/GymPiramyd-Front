@@ -70,7 +70,7 @@ const InfoCard = (props) => {
               onChange={props.handleInputsChange}
               placeholder="Fecha de nacimiento"
               defaultValue={moment(props.dataCliente.fechaNacimiento).format(
-                "YYYY-MM-DD"
+                "DD-MM-YYYY"
               )}
             />
           </FloatingLabel>
@@ -127,7 +127,7 @@ const InfoCard = (props) => {
             </Col>
             <Col className="col-12 col-sm-8">
               <h5 style={{ fontWeight: "300" }}>
-                {moment(props.dataCliente.fechaNacimiento).format("YYYY-MM-DD")}
+                {moment(props.dataCliente.fechaNacimiento).format("DD-MM-YYYY")}
               </h5>
             </Col>
           </Row>
@@ -171,7 +171,7 @@ const InfoCard = (props) => {
               {props.dataCliente.fechaUltimoPago ? (
                 <h5 style={{ fontWeight: "300" }}>
                   {moment(props.dataCliente.fechaUltimoPago).format(
-                    "YYYY-MM-DD"
+                    "DD-MM-YYYY"
                   )}
                 </h5>
               ) : (
@@ -187,7 +187,7 @@ const InfoCard = (props) => {
               {props.dataCliente.fechaProximoPago ? (
                 <h5 style={{ fontWeight: "300" }}>
                   {moment(props.dataCliente.fechaProximoPago).format(
-                    "YYYY-MM-DD"
+                    "DD-MM-YYYY"
                   )}
                 </h5>
               ) : (

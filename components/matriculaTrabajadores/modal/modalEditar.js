@@ -121,7 +121,7 @@ const ModalEditar = (props) => {
                   <h5 style={{ fontWeight: "300" }}>
                     {moment(
                       props.dataTrabajador.fechaUltimaActualizacion
-                    ).format("YYYY-MM-DD")}
+                    ).format("DD-MM-YYYY")}
                   </h5>
                 </Col>
               </Row>

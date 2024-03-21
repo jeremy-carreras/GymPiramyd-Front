@@ -34,7 +34,7 @@ export const avisoFalta = async (avisoTitulo, avisoTexto) => {
 export const avisoLoading = async (avisoTexto) => {
   await Swal.fire({
     title: "Espere un momento",
-    html: "Puede tardar unos instantes",
+    html: avisoTexto,
     text: avisoTexto,
     allowOutsideClick: false,
     didOpen: () => Swal.showLoading(),

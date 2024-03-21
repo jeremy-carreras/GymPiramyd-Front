@@ -17,6 +17,7 @@ import { useRouter } from "next/dist/client/router";
 //import SpinnerLoading from "../general/spinnerLoading";
 import moment from "moment";
 import axios from "axios";
+import { avisoLoading, cerrarLoading } from "../../../funciones/avisos";
 
 const urlApi = process.env.API_ROOT;
 
@@ -50,13 +51,16 @@ const Tabla = () => {
 
   async function getData() {
     try {
+      avisoLoading();
       const response = await axios.get(`${urlApi}/Pago/pagos`);
       setDataCompleta(response.data);
       setData(response.data);
       //console.log(response.data);
+      cerrarLoading();
     } catch (error) {
       avisoError("No fue posible cargar los pedidos");
       console.log(error);
+      cerrarLoading();
     }
   }
 
@@ -197,7 +201,7 @@ const Tabla = () => {
                         </td>
                         <td style={{ textAlign: "center" }}>
                           <p className="m-2"></p>{" "}
-                          {moment(cliente.fechaPago).format("YYYY-MM-DD")}
+                          {moment(cliente.fechaPago).format("DD-MM-YYYY")}
                         </td>
                         <td style={{ textAlign: "center" }}>
                           <p className="m-2"></p> {cliente.idCliente}

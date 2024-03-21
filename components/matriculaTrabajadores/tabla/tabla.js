@@ -16,7 +16,11 @@ import styles from "./tabla.module.css";
 import { useState, useEffect } from "react";
 import ModalEditar from "../modal/modalEditar";
 import ModalPassword from "../modal/modalPassword";
-import { avisoError } from "../../../funciones/avisos";
+import {
+  avisoError,
+  avisoLoading,
+  cerrarLoading,
+} from "../../../funciones/avisos";
 import moment from "moment";
 
 const urlApi = process.env.API_ROOT;
@@ -35,13 +39,16 @@ const Tabla = () => {
   };
 
   async function getData() {
+    avisoLoading();
     try {
       const response = await axios.get(`${urlApi}/Trabajador/trabajadores`);
       setDataCompleta(response.data);
       setData(response.data);
+      cerrarLoading();
     } catch (error) {
       avisoError("No fue posible cargar los trabajadores");
       console.log(error);
+      cerrarLoading();
     }
   }
 
@@ -71,7 +78,11 @@ const Tabla = () => {
   const campos = [
     { id: 1, nombre: "Nombre", nombreVar: "nombre" },
     { id: 2, nombre: "Usuario", nombreVar: "usuario" },
-    { id: 3, nombre: "Fecha actualización", nombreVar: "fechaUltimaActualizacion" },
+    {
+      id: 3,
+      nombre: "Fecha actualización",
+      nombreVar: "fechaUltimaActualizacion",
+    },
   ];
 
   const filtrarElementos = (terminoBusqueda) => {
@@ -175,7 +186,7 @@ const Tabla = () => {
                         <td style={{ textAlign: "center" }}>
                           <p className="m-2"></p>{" "}
                           {moment(cliente.fechaUltimaActualizacion).format(
-                            "YYYY-MM-DD"
+                            "DD-MM-YYYY"
                           )}
                         </td>
                       </tr>
