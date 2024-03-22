@@ -37,16 +37,16 @@ const FormularioPago = () => {
 
   useEffect(() => {
     async function getData() {
-      avisoLoading("Obteniendo datos de pago")
+      avisoLoading("Obteniendo datos de pago");
       try {
         const response = await axios.get(`${urlApi}/Plan/planes`);
         console.log(response.data);
         setDataPlan(response.data);
-        cerrarLoading()
+        cerrarLoading();
       } catch (error) {
         avisoError("No fue posible cargar los datos de los planes");
         console.log(error);
-        cerrarLoading()
+        cerrarLoading();
       }
       const params = new URLSearchParams(window.location.search);
       const idURL = params.get("idCliente") || "";
@@ -157,7 +157,19 @@ const FormularioPago = () => {
         <Col className="col-4 col-sm-4 col-md-4 col-lg-3">
           <h5>Monto:</h5>
         </Col>
-        <Col>{monto != 0 ? <h5>${monto}.00</h5> : <></>}</Col>
+        <Col>
+          {monto != 0 ? (
+            <h5>
+              $
+              {monto.toLocaleString("en-EN", {
+                minimumFractionDigits: 2,
+                maximumFractionDigits: 2,
+              })}
+            </h5>
+          ) : (
+            <></>
+          )}
+        </Col>
       </Row>
       <Row className="pb-4 text-center">
         <Col>

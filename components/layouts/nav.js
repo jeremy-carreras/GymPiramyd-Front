@@ -19,6 +19,16 @@ const Nav = (props) => {
     fetchData();
   });
 
+  const menu_url = [
+    { url: "matricula", nombre: "Matrícula", users: 2 },
+    { url: "inscripciones", nombre: "Inscripciones", users: 2 },
+    { url: "registroPagos", nombre: "Registro de pagos", users: 2 },
+    { url: "pagos", nombre: "Pagos", users: 2 },
+    { url: "altaTrabajador", nombre: "Alta de trabajador", users: 2 },
+    { url: "matriculaTrabajadores", nombre: "Trabajadores", users: 2 },
+    { url: "planes", nombre: "Planes", users: 2 },
+  ];
+
   return (
     <div className={`${styles.nav}`}>
       <div className={`${styles.centro} container`}>
@@ -47,60 +57,17 @@ const Nav = (props) => {
           <Offcanvas.Title>Menú</Offcanvas.Title>
         </Offcanvas.Header>
         <Offcanvas.Body className={styles.contenedor}>
-          {tipoUsuario === 1 ? (
-            <div>
-              <br />
-              <Link href="/matricula">
-                <a className={`${styles.link} my-5`}>Matrícula</a>
-              </Link>
-              <br />
-              <Link href="/inscripciones">
-                <a className={`${styles.link} my-5`}>Inscripciones</a>
-              </Link>
-              <br />
-              <Link href="/registroPagos">
-                <a className={`${styles.link} my-5`}>Registro de pagos</a>
-              </Link>
-              <br />
-              <Link href="/pagos">
-                <a className={`${styles.link} my-5`}>Pagos</a>
-              </Link>
-              <br />
-              <Link href="/altaTrabajador">
-                <a className={`${styles.link} my-5`}>Alta de trabajador</a>
-              </Link>
-              <br />
-              <Link href="/matriculaTrabajadores">
-                <a className={`${styles.link} my-5`}>Trabajadores</a>
-              </Link>
-              <br />
-            </div>
-          ) : (
-            <></>
-          )}
-          {tipoUsuario === 2 ? (
-            <div>
-              <br />
-              <Link href="/matricula">
-                <a className={`${styles.link} my-5`}>Matrícula</a>
-              </Link>
-              <br />
-              <Link href="/inscripciones">
-                <a className={`${styles.link} my-5`}>Inscripciones</a>
-              </Link>
-              <br />
-              <Link href="/registroPagos">
-                <a className={`${styles.link} my-5`}>Registro de pagos</a>
-              </Link>
-              <br />
-              <Link href="/pagos">
-                <a className={`${styles.link} my-5`}>Pagos</a>
-              </Link>
-              <br />
-            </div>
-          ) : (
-            <></>
-          )}
+          <div>
+            <br />
+            {menu_url.map((opcion, index) => (
+              <div className="mt-1" key={index}>
+                <Link href={"/" + opcion.url}>
+                  <a className={`${styles.link} my-5`}>{opcion.nombre}</a>
+                </Link>
+                <br />
+              </div>
+            ))}
+          </div>
           <Link href="/">
             <a className={`${styles.link} ${styles.cerrar}`}>Cerrar sesión</a>
           </Link>

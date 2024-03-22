@@ -24,7 +24,6 @@ const urlApi = process.env.API_ROOT;
 const Tabla = () => {
   const [dataCompleta, setDataCompleta] = useState([]);
   const [data, setData] = useState([]);
-  const [dataPlan, setDataPlan] = useState([]);
   const [busqueda, setBusqueda] = useState("");
   const [reverse, setReverse] = useState(false);
   const [caret] = useState([
@@ -191,10 +190,6 @@ const Tabla = () => {
                     {data.map((cliente, index) => (
                       <tr
                         key={index}
-                        /*onClick={() => {
-                            handleNextPage(cliente);
-                          }}
-                          style={{ cursor: "pointer" }}*/
                       >
                         <td style={{ textAlign: "center" }}>
                           <p className="m-2"></p> {cliente.folio}
@@ -216,7 +211,11 @@ const Tabla = () => {
                           <p className="m-2"></p> {cliente.cantidad}
                         </td>
                         <td style={{ textAlign: "center" }}>
-                          <p className="m-2"></p> ${cliente.monto}.00
+                          <p className="m-2"></p> $
+                          {cliente.monto.toLocaleString("en-EN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
                         </td>
                       </tr>
                     ))}

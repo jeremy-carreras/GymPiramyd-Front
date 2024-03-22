@@ -5,8 +5,8 @@ import {
   InputGroup,
   FormControl,
   Row,
+  Button,
 } from "react-bootstrap";
-import axios from "axios";
 import {
   faCaretDown,
   faSearch,
@@ -14,47 +14,49 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styles from "./tabla.module.css";
 import { useState, useEffect } from "react";
-import ModalEditar from "../modal/modalEditar";
-import ModalPassword from "../modal/modalPassword";
+import axios from "axios";
 import {
   avisoError,
   avisoLoading,
   cerrarLoading,
 } from "../../../funciones/avisos";
-import moment from "moment";
+import ModalEditar from "../modal/modalEditar";
 
 const urlApi = process.env.API_ROOT;
 
 const Tabla = () => {
   const [dataCompleta, setDataCompleta] = useState([]);
   const [data, setData] = useState([]);
+  const [dataEditar, setDataEditar] = useState([]);
   const [busqueda, setBusqueda] = useState("");
-  const [reverse, setReverse] = useState(false);
-  const [caret] = useState([faCaretDown, faCaretDown, faCaretDown]);
   const [showModalEditar, setShowModalEditar] = useState(false);
-  const [dataEditar, setDataEditar] = useState({});
+  const [reverse, setReverse] = useState(false);
+  const [caret] = useState([
+    faCaretDown,
+    faCaretDown,
+    faCaretDown,
+  ]);
+
+  useEffect(() => {
+    async function fetchData() {
+      try {
+        avisoLoading();
+        const response = await axios.get(`${urlApi}/plan/planes`);
+        setDataCompleta(response.data);
+        setData(response.data);
+        cerrarLoading();
+      } catch (error) {
+        console.log(error);
+        avisoError("No fue podible obtener los datos");
+        cerrarLoading();
+      }
+    }
+    fetchData();
+  }, []);
 
   const handleCloseModalEditar = () => {
     setShowModalEditar(!showModalEditar);
   };
-
-  async function getData() {
-    avisoLoading();
-    try {
-      const response = await axios.get(`${urlApi}/Trabajador/trabajadores`);
-      setDataCompleta(response.data);
-      setData(response.data);
-      cerrarLoading();
-    } catch (error) {
-      avisoError("No fue posible cargar los trabajadores");
-      console.log(error);
-      cerrarLoading();
-    }
-  }
-
-  useEffect(() => {
-    getData();
-  }, []);
 
   function predicateBy(array) {
     return function (a, b) {
@@ -76,25 +78,27 @@ const Tabla = () => {
   };
 
   const campos = [
-    { id: 1, nombre: "Nombre", nombreVar: "nombre" },
-    { id: 2, nombre: "Usuario", nombreVar: "usuario" },
-    {
-      id: 3,
-      nombre: "Fecha actualización",
-      nombreVar: "fechaUltimaActualizacion",
-    },
+    { id: 1, nombre: "Clave", nombreVar: "idPlan" },
+    { id: 2, nombre: "Nombre", nombreVar: "nombre" },
+    { id: 3, nombre: "Precio", nombreVar: "precio" },
+    { id: 4, nombre: "Editar", nombreVar: "" },
   ];
 
   const filtrarElementos = (terminoBusqueda) => {
     let search = dataCompleta.filter((item) => {
       if (
         item.nombre.toLowerCase().includes(terminoBusqueda.toLowerCase()) ||
-        item.usuario.toLowerCase().includes(terminoBusqueda.toLowerCase())
+        String(item.idPlan)
+          .toLowerCase()
+          .includes(terminoBusqueda.toLowerCase()) ||
+        String(item.precio)
+          .toLowerCase()
+          .includes(terminoBusqueda.toLowerCase())
       ) {
         return item;
       }
     });
-    setData(search);
+    setData([...search]);
   };
 
   const changeCaret = (index, reverse) => {
@@ -108,19 +112,21 @@ const Tabla = () => {
   return (
     <Container
       style={{ backgroundColor: "#fff" }}
-      className={`${styles.container} ${styles.shadow} rounded my-5`}
+      className={`${styles.container} ${styles.shadow} rounded my-3`}
     >
       <div>
         {dataCompleta.length === 0 ? (
-          <Row style={{ textAlign: "center", padding: "200px 0 200px 0" }}>
-            <p className="h2">No hay registros</p>
+          <Row style={{ textAlign: "center" }}>
+            <p className="h2" style={{ marginTop: "12rem" }}>
+              No hay registros
+            </p>
           </Row>
         ) : (
           <div className="p-4">
             <div style={{ textAlign: "left", width: "15rem" }}>
               <InputGroup className="mt-2" size="sm">
                 <FormControl
-                  placeholder="Nombre, usuario"
+                  placeholder="Clave, Nombre"
                   value={busqueda}
                   onChange={(value) => {
                     setBusqueda(value.target.value);
@@ -139,10 +145,10 @@ const Tabla = () => {
             ) : (
               <div
                 style={{
-                  marginTop: "30px",
-                  overflow: "scroll",
-                  maxHeight: "25rem",
-                  minHeight: "12rem",
+                  marginTop: "1.5rem",
+                  //overflow: "scroll",
+                  //maxHeight: "25rem",
+                  //minHeight: "12rem",
                 }}
               >
                 <Table hover responsive className="table table-striped">
@@ -151,42 +157,50 @@ const Tabla = () => {
                       {campos.map((campo, index) => (
                         <th style={{ textAlign: "center" }} key={campo.id}>
                           {campo.nombre}{" "}
-                          <FontAwesomeIcon
-                            className={`mt-2 ${styles.caretDown}`}
-                            icon={caret[index]}
-                            onClick={() => {
-                              ordenar(data, campo.nombreVar);
-                              //console.log("Se ordena " + data + " por " + campo.nombreVar);
-                              setReverse(!reverse);
-                              changeCaret(index, reverse);
-                            }}
-                          />
+                          {caret[index] ? (
+                            <FontAwesomeIcon
+                              className={`mt-2 ${styles.caretDown}`}
+                              icon={caret[index]}
+                              onClick={() => {
+                                ordenar(data, campo.nombreVar);
+                                //console.log("Se ordena " + data + " por " + campo.nombreVar);
+                                setReverse(!reverse);
+                                changeCaret(index, reverse);
+                              }}
+                            />
+                          ) : (
+                            <></>
+                          )}
                         </th>
                       ))}
                     </tr>
                   </thead>
                   <tbody>
-                    {data.map((cliente, index) => (
-                      <tr
-                        key={index}
-                        onClick={() => {
-                          //handleNextPage(cliente);
-                          setDataEditar(dataCompleta[index]);
-                          setShowModalEditar(!showModalEditar);
-                        }}
-                        style={{ cursor: "pointer" }}
-                      >
+                    {data.map((plan, index) => (
+                      <tr key={index} style={{ cursor: "pointer" }}>
                         <td style={{ textAlign: "center" }}>
-                          <p className="m-2"></p> {cliente.nombre}
+                          <p className="m-2"></p> {plan.idPlan}
                         </td>
                         <td style={{ textAlign: "center" }}>
-                          <p className="m-2"></p> {cliente.usuario}
+                          <p className="m-2"></p> {plan.nombre}
                         </td>
                         <td style={{ textAlign: "center" }}>
                           <p className="m-2"></p>{" "}
-                          {moment(cliente.fechaUltimaActualizacion).format(
-                            "DD-MM-YYYY"
-                          )}
+                          {plan.precio.toLocaleString("en-EN", {
+                            minimumFractionDigits: 2,
+                            maximumFractionDigits: 2,
+                          })}
+                        </td>
+                        <td style={{ textAlign: "center" }}>
+                          <Button
+                            onClick={() => {
+                              setShowModalEditar(!showModalEditar);
+                              setDataEditar(plan);
+                            }}
+                            className="m-0"
+                          >
+                            Editar
+                          </Button>
                         </td>
                       </tr>
                     ))}
@@ -200,9 +214,8 @@ const Tabla = () => {
       <ModalEditar
         show={showModalEditar}
         handleClose={handleCloseModalEditar}
-        dataTrabajador={dataEditar}
-        setDataTrabajador={setDataEditar}
-        renderData={getData}
+        data={dataEditar}
+        setData={setDataEditar}
       ></ModalEditar>
     </Container>
   );
